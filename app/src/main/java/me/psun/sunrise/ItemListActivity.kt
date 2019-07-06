@@ -4,25 +4,18 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
 import android.widget.Spinner
 import android.widget.TextView
+import androidx.fragment.app.Fragment
 
-import me.psun.sunrise.dummy.DummyContent
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 
-/**
- * An activity representing a list of Pings. This activity
- * has different presentations for handset and tablet-size devices. On
- * tablets, the activity presents the list of items and
- * item details side-by-side using two vertical panes.
- */
 class ItemListActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -33,7 +26,7 @@ class ItemListActivity : AppCompatActivity() {
         toolbar.title = title
 
         setupRecyclerView(item_list)
-        setupAlarmSpinner()
+        //setupAlarmSpinner()
     }
 
     private fun setupAlarmSpinner() {
@@ -46,30 +39,32 @@ class ItemListActivity : AppCompatActivity() {
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
-        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this, DummyContent.ITEMS)
+        recyclerView.adapter = SimpleItemRecyclerViewAdapter(this)
     }
 
     class SimpleItemRecyclerViewAdapter(
-        private val parentActivity: ItemListActivity,
-        private val values: List<DummyContent.DummyItem>
+        private val parentActivity: ItemListActivity
     ) :
         RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
 
         private val onClickListener: View.OnClickListener
+        private val recyclerListTexts = listOf<String>("Set Color", "BPM Sync", "Sunrise Alarm", "Settings")
 
         init {
             onClickListener = View.OnClickListener { v ->
-                val item = v.tag as DummyContent.DummyItem
-
-                val fragment = ItemDetailFragment().apply {
-                    arguments = Bundle().apply {
-                        putString(ItemDetailFragment.ARG_ITEM_ID, item.id)
-                    }
+                val idx = v.tag as Int
+                when (idx) {
+                    0 -> StaticFragment()
+                    1 -> BPMFragment()
+                    2 -> SunriseFragment()
+                    3 -> SettingsFragment()
+                    else -> null
+                }?.let {
+                    parentActivity.supportFragmentManager
+                        .beginTransaction()
+                        .replace(R.id.item_detail_container, it)
+                        .commit()
                 }
-                parentActivity.supportFragmentManager
-                    .beginTransaction()
-                    .replace(R.id.item_detail_container, fragment)
-                    .commit()
             }
         }
 
@@ -80,17 +75,17 @@ class ItemListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            val item = values[position]
-            holder.idView.text = item.id
-            holder.contentView.text = item.content
+
+            holder.idView.text = position.toString()
+            holder.contentView.text = recyclerListTexts[position]
 
             with(holder.itemView) {
-                tag = item
+                tag = position
                 setOnClickListener(onClickListener)
             }
         }
 
-        override fun getItemCount() = values.size
+        override fun getItemCount() = recyclerListTexts.size
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
             val idView: TextView = view.id_text

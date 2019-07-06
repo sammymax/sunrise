@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              android:orientation="vertical"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent" android:padding="@dimen/detail_padding">
+
+    <TableLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:stretchColumns="*">
+
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button
+                    android:text="TAP"
+                    android:layout_width="wrap_content"
+                    android:layout_height="160dp" android:id="@+id/bpm_tap"/>
+            <Button
+                    android:text="SYNC"
+                    android:layout_width="wrap_content"
+                    android:layout_height="160dp" android:id="@+id/bpm_sync"/>
+        </TableRow>
+        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+            <Button
+                    android:text="Halve BPM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/bpm_halve"/>
+            <Button
+                    android:text="Double BPM"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/bpm_double"/>
+        </TableRow>
+    </TableLayout>
+    <Switch
+            android:text="Quantize"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" android:id="@+id/switch1" android:textSize="18sp"
+            android:switchPadding="10dp" android:paddingTop="10dp" android:paddingStart="2dp"/>
+    <TextView
+            android:text="BPM: -"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content" android:id="@+id/textView2" android:textSize="18sp"
+            android:paddingTop="10dp" android:paddingStart="2dp"/>
+</LinearLayout>

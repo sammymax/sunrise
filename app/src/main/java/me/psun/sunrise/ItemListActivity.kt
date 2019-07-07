@@ -1,15 +1,12 @@
 package me.psun.sunrise
 
+import android.content.Context
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ArrayAdapter
-import android.widget.Spinner
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
@@ -27,13 +24,21 @@ class ItemListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        savedInstanceState?.let {
-            appState = it.get("appState") as AppState
-        }
+        appState = AppState(getPreferences(Context.MODE_PRIVATE))
         val frag0 = StaticFragment()
         val frag1 = BPMFragment()
         val frag2 = SunriseFragment()
         val frag3 = SettingsFragment()
+        frag3.arguments = appState.getSettingsBundle()
+        frag3.setMacAddressListener(object : MacAddressListener {
+            override fun onMacAddressChange(mac: String) {
+                appState.settings_mac = mac
+                with (getPreferences(Context.MODE_PRIVATE).edit()) {
+                    putString("settings.mac", mac)
+                    commit()
+                }
+            }
+        })
         supportFragmentManager.beginTransaction()
             .add(R.id.item_detail_container, frag3, "frag3").hide(frag3)
             .add(R.id.item_detail_container, frag2, "frag2").hide(frag2)
@@ -41,25 +46,10 @@ class ItemListActivity : AppCompatActivity() {
             .add(R.id.item_detail_container, frag0, "frag0")
             .commit()
         setupRecyclerView(item_list)
-        //setupAlarmSpinner()
-    }
-
-    private fun setupAlarmSpinner() {
-        val alarmSpinner : Spinner = findViewById(R.id.alarm_spinner)
-        val dataAdapter = ArrayAdapter<String>(this,
-            android.R.layout.simple_spinner_dropdown_item,
-            listOf("Hello1", "hello2", "hello3"))
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
-        alarmSpinner.adapter = dataAdapter
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
         recyclerView.adapter = SimpleItemRecyclerViewAdapter(this)
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        outState.putSerializable("appState", appState)
     }
 
     fun changeFragIdx(newIdx: Int) {

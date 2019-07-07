@@ -64,7 +64,11 @@
             android:layout_height="match_parent" android:layout_marginLeft="50dp">
         <me.psun.sunrise.DiscreteSlider
                 android:id="@+id/coldSlider"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:layout_marginBottom="30dp"/>
+        <me.psun.sunrise.DiscreteSlider
+                android:id="@+id/warmSlider"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
     </LinearLayout>
 </LinearLayout>

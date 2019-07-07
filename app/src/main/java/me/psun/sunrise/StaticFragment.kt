@@ -7,17 +7,12 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.SeekBar
-import android.widget.SeekBar.OnSeekBarChangeListener
 import android.widget.TextView
-import com.skydoves.colorpickerview.ColorEnvelope
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
 import kotlinx.android.synthetic.main.mode_static.view.*
 import com.skydoves.colorpickerview.preference.ColorPickerPreferenceManager
-
-
 
 class StaticFragment : Fragment() {
     private var colorPickerView : ColorPickerView? = null
@@ -26,14 +21,9 @@ class StaticFragment : Fragment() {
     private var rgbPreview : View? = null
 
     private var coldBar : DiscreteSlider? = null
-    private var warmLevel : TextView? = null
-
-    private var ww : Int = 0
-    private var wc : Int = 0
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-    }
+    private var warmBar : DiscreteSlider? = null
+    private var cw = 0
+    private var ww = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -46,6 +36,20 @@ class StaticFragment : Fragment() {
         rgbPreview = view.findViewById(R.id.rgbPreview)
 
         coldBar = view.findViewById(R.id.coldSlider)
+        warmBar = view.findViewById(R.id.warmSlider)
+
+        coldBar?.setDiscreteValue(cw)
+        warmBar?.setDiscreteValue(ww)
+        coldBar?.setDiscreteSliderListener(object : DiscreteSliderListener{
+            override fun onChange(newValue: Int) {
+                cw = newValue
+            }
+        })
+        warmBar?.setDiscreteSliderListener(object : DiscreteSliderListener {
+            override fun onChange(newValue: Int) {
+                ww = newValue
+            }
+        })
 
         val colorListener = ColorEnvelopeListener{envelope, _ ->
             colorText?.text = "#" + envelope.hexCode.substring(2)

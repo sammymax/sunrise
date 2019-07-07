@@ -1,7 +1,8 @@
 package me.psun.sunrise
 
-import android.content.Intent
 import android.os.Bundle
+import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -17,6 +18,7 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 
 class ItemListActivity : AppCompatActivity() {
+    var appState : AppState = AppState()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -25,6 +27,19 @@ class ItemListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
+        savedInstanceState?.let {
+            appState = it.get("appState") as AppState
+        }
+        val frag0 = StaticFragment()
+        val frag1 = BPMFragment()
+        val frag2 = SunriseFragment()
+        val frag3 = SettingsFragment()
+        supportFragmentManager.beginTransaction()
+            .add(R.id.item_detail_container, frag3, "frag3").hide(frag3)
+            .add(R.id.item_detail_container, frag2, "frag2").hide(frag2)
+            .add(R.id.item_detail_container, frag1, "frag1").hide(frag1)
+            .add(R.id.item_detail_container, frag0, "frag0")
+            .commit()
         setupRecyclerView(item_list)
         //setupAlarmSpinner()
     }
@@ -42,6 +57,21 @@ class ItemListActivity : AppCompatActivity() {
         recyclerView.adapter = SimpleItemRecyclerViewAdapter(this)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        outState.putSerializable("appState", appState)
+    }
+
+    fun changeFragIdx(newIdx: Int) {
+        val oldId = "frag${appState.frag_idx}"
+        val newId = "frag$newIdx"
+        supportFragmentManager.beginTransaction()
+            .hide(supportFragmentManager.findFragmentByTag(oldId) as Fragment)
+            .show(supportFragmentManager.findFragmentByTag(newId) as Fragment)
+            .commit()
+        appState.frag_idx = newIdx
+    }
+
     class SimpleItemRecyclerViewAdapter(
         private val parentActivity: ItemListActivity
     ) :
@@ -52,19 +82,7 @@ class ItemListActivity : AppCompatActivity() {
 
         init {
             onClickListener = View.OnClickListener { v ->
-                val idx = v.tag as Int
-                when (idx) {
-                    0 -> StaticFragment()
-                    1 -> BPMFragment()
-                    2 -> SunriseFragment()
-                    3 -> SettingsFragment()
-                    else -> null
-                }?.let {
-                    parentActivity.supportFragmentManager
-                        .beginTransaction()
-                        .replace(R.id.item_detail_container, it)
-                        .commit()
-                }
+                parentActivity.changeFragIdx(v.tag as Int)
             }
         }
 
@@ -75,7 +93,6 @@ class ItemListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-
             holder.idView.text = position.toString()
             holder.contentView.text = recyclerListTexts[position]
 

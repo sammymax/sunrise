@@ -9,7 +9,8 @@
             android:layout_height="wrap_content"
             android:inputType="textPersonName"
             android:ems="10"
-            android:id="@+id/macAddress" android:textSize="24sp" android:hint="Controller MAC Address"/>
+            android:id="@+id/macAddress" android:textSize="24sp" android:hint="Controller MAC Address"
+            android:singleLine="true"/>
     <Button
             android:text="Save"
             android:layout_width="match_parent"

@@ -1,16 +1,70 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:orientation="vertical"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
-              android:layout_height="match_parent" android:padding="@dimen/detail_padding">
+              android:layout_height="match_parent"
+              android:padding="@dimen/detail_padding" android:weightSum="100"
+              android:dividerPadding="10dp" android:divider="?android:attr/dividerVertical"
+              android:showDividers="middle">
 
-    <com.skydoves.colorpickerview.ColorPickerView
-            android:id="@+id/colorPickerView"
+    <LinearLayout
+            android:orientation="vertical"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent" android:layout_marginRight="50dp">
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:text="RGB Code:"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/rgbLabel" android:layout_weight="1"
+                    android:textSize="@dimen/static_font_size"/>
+            <TextView
+                    android:text="TextView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" android:id="@+id/colorText" android:gravity="left"
+                    android:typeface="monospace" android:textSize="@dimen/static_font_size"/>
+            <FrameLayout
+                    android:layout_width="52dp"
+                    android:layout_height="match_parent" android:layout_marginLeft="10dp"
+                    android:foregroundGravity="center_horizontal">
+
+                <View
+                        android:layout_width="52dp"
+                        android:layout_height="match_parent" android:id="@+id/view2" android:background="#000000"
+                />
+                <View
+                        android:layout_width="50dp"
+                        android:layout_height="match_parent" android:id="@+id/rgbPreview"
+                        android:layout_marginTop="1dp" android:layout_marginBottom="1dp"
+                        android:layout_marginLeft="1dp"/>
+            </FrameLayout>
+        </LinearLayout>
+        <com.skydoves.colorpickerview.ColorPickerView
+                android:id="@+id/colorPickerView"
+                android:layout_width="360dp"
+                android:layout_height="360dp"
+                app:palette="@drawable/palette"
+                app:selector="@drawable/wheel"
+                app:actionMode="last"
+                app:preferenceName="staticColorPicker" android:layout_marginTop="10dp"/>
+        <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+                android:id="@+id/brightnessSlide"
+                android:layout_width="360dp"
+                android:layout_height="wrap_content"
+                app:selector_BrightnessSlider="@drawable/wheel"
+                app:borderColor_BrightnessSlider="@android:color/darker_gray"
+                app:borderSize_BrightnessSlider="5" android:layout_marginTop="10dp"/>
+    </LinearLayout>
+    <LinearLayout
+            android:orientation="vertical"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
-            app:palette="@drawable/palette"
-            app:selector="@drawable/wheel"
-            app:actionMode="last">
-    </com.skydoves.colorpickerview.ColorPickerView>
+            android:layout_height="match_parent" android:layout_marginLeft="50dp">
+        <me.psun.sunrise.DiscreteSlider
+                android:id="@+id/coldSlider"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </LinearLayout>
 </LinearLayout>

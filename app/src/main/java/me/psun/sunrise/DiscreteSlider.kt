@@ -34,7 +34,7 @@ class DiscreteSlider : LinearLayout {
 
                 override fun onProgressChanged(bar: SeekBar?, progress: Int, fromUser: Boolean) {
                     level.text = progress.toString()
-                    listener?.onChange(progress)
+                    listener?.onChange(progress, fromUser)
                 }
             }
         )

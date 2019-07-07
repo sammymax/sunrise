@@ -32,11 +32,11 @@
     <Switch
             android:text="Quantize"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/switch1" android:textSize="18sp"
+            android:layout_height="wrap_content" android:id="@+id/quantize" android:textSize="18sp"
             android:switchPadding="10dp" android:paddingTop="10dp" android:paddingStart="2dp"/>
     <TextView
             android:text="BPM: -"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/textView2" android:textSize="18sp"
+            android:layout_height="wrap_content" android:id="@+id/bpm_display" android:textSize="18sp"
             android:paddingTop="10dp" android:paddingStart="2dp"/>
 </LinearLayout>

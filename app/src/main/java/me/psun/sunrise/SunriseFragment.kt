@@ -1,7 +1,6 @@
 package me.psun.sunrise
 
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -29,44 +28,15 @@ class SunriseFragment : Fragment() {
 
         timePicker?.setOnTimeChangedListener{_, hour, minute ->
             val c = GregorianCalendar()
-            /*if (c.get(GregorianCalendar.HOUR_OF_DAY) > hour || (c.get(GregorianCalendar.HOUR_OF_DAY) == hour && c.get(GregorianCalendar.MINUTE) >= minute))
+            if (c.get(GregorianCalendar.HOUR_OF_DAY) > hour || (c.get(GregorianCalendar.HOUR_OF_DAY) == hour && c.get(GregorianCalendar.MINUTE) >= minute))
                 c.add(GregorianCalendar.DATE, 1)
             c.set(GregorianCalendar.HOUR_OF_DAY, hour)
             c.set(GregorianCalendar.MINUTE, minute)
             c.set(GregorianCalendar.SECOND, 0)
             c.set(GregorianCalendar.MILLISECOND, 0)
-            Log.e("times", c.timeInMillis.toString())*/
 
-            /*if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.e("ad", Settings.canDrawOverlays(context).toString())
-            }
-            try {
-                val mgr = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-                val viewToAdd = View(context)
-                val params = WindowManager.LayoutParams(
-                    0,
-                    0,
-                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O)
-                        WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY
-                    else
-                        WindowManager.LayoutParams.TYPE_SYSTEM_ALERT,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE or WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
-                    PixelFormat.TRANSPARENT
-                )
-                viewToAdd.layoutParams = params
-                mgr.addView(viewToAdd, params)
-                mgr.removeView(viewToAdd)
-                Log.e("succ", "succ")
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                Log.e("ad", Settings.canDrawOverlays(context).toString())
-            }*/
             val alarm = activity!!.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            //val pendingIntent = PendingIntent.getBroadcast(context, 0, Intent(context, RingingAlarmReceiver::class.java), 0)
             val pendingIntent = PendingIntent.getActivity(context, 0, Intent(context, RingingAlarm::class.java), 0)
-            //val pendingIntent = PendingIntent.getActivity(context, 0, Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION), 0)
             alarm.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis + 2500, pendingIntent)
         }
 

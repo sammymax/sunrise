@@ -7,18 +7,12 @@ import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.TextView
 import androidx.fragment.app.Fragment
 
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
-import android.graphics.PixelFormat
-import androidx.core.content.ContextCompat.getSystemService
-
-
-
 class ItemListActivity : AppCompatActivity() {
     var appState : AppState = AppState()
 

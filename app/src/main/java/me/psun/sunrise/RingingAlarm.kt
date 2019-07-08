@@ -2,6 +2,7 @@ package me.psun.sunrise
 
 import android.app.Activity
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
@@ -13,10 +14,16 @@ import android.os.PowerManager
 
 class RingingAlarm : Activity() {
     var off : Button? = null
+    var mediaPlayer : MediaPlayer? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.e("ad", "ringing toyoooo")
+        val songId = intent.getIntExtra("SongIdentifier", -1)
+        if (songId >= 0) {
+            mediaPlayer = MediaPlayer.create(this, songId)
+            mediaPlayer?.isLooping = true
+        }
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -46,13 +53,14 @@ class RingingAlarm : Activity() {
             "sunrise:Alarm"
         )
         wakeLock.acquire()
+        mediaPlayer?.start()
 
         off = findViewById(R.id.alarm_off)
-        off?.let {
-            Log.e("tag","found off")
-        }
         off?.setOnClickListener{_ ->
             Log.e("pressed", "pressed")
+            mediaPlayer?.stop()
+            mediaPlayer?.release()
+            mediaPlayer = null
             finish()
         }
     }

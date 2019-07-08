@@ -1,25 +1,42 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              xmlns:tools="http://schemas.android.com/tools" android:orientation="horizontal"
+              android:orientation="horizontal"
               android:layout_width="match_parent"
               android:layout_height="match_parent" android:padding="@dimen/detail_padding" android:weightSum="100">
 
     <LinearLayout
             android:orientation="vertical"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent" android:layout_weight="50">
-        <Switch
-                android:text="Enabled"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" android:layout_weight="50" android:gravity="center_horizontal">
+        <TextView
+                android:text="Alarm Set"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/sunrise_enabled"/>
-        <TimePicker
-                android:id="@+id/timePicker"
+                android:layout_height="wrap_content" android:id="@+id/is_alarm_set" android:textSize="18sp"
+                android:textAlignment="center" android:layout_weight="1" android:gravity="bottom"/>
+        <LinearLayout
+                android:orientation="horizontal"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+            <TextView
+                    android:text="12:00"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/alarm_time"
+                    android:fontFamily="sans-serif-thin"
+                    android:textSize="108sp" android:layout_weight="1" android:textAlignment="textEnd"/>
+            <TextView
+                    android:text="PM"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" android:id="@+id/alarm_am_pm"
+                    android:fontFamily="sans-serif-thin" android:textSize="108sp" android:textStyle="bold"
+                    android:textColor="@color/colorPrimary" android:layout_weight="1"/>
+        </LinearLayout>
+        <TextView
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:numbersSelectorColor="#009688"
-                android:headerBackground="#000000"/>
-        <Spinner
+                android:layout_height="wrap_content" android:id="@+id/til_sunrise" android:layout_weight="1"
+                android:textSize="18sp"/>
+        <Button
+                android:text="Edit..."
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/alarm_spinner"/>
+                android:layout_height="wrap_content" android:id="@+id/edit_alarm"/>
     </LinearLayout>
 </LinearLayout>

@@ -24,7 +24,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".RingingAlarm"
+        <activity android:name=".RingingAlarmActivity"
                   android:showOnLockScreen="true"/>
     </application>
 

@@ -15,7 +15,7 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 
 class ItemListActivity : AppCompatActivity() {
-    var appState : AppState = AppState()
+    var appState : AppState = AppState(this)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,10 +24,10 @@ class ItemListActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        appState = AppState(getPreferences(Context.MODE_PRIVATE))
+        appState = AppState(this, getPreferences(Context.MODE_PRIVATE))
         val frag0 = StaticFragment()
         val frag1 = BPMFragment()
-        val frag2 = SunriseFragment()
+        val frag2 = SunriseFragment(appState)
         val frag3 = SettingsFragment()
         frag3.arguments = appState.getSettingsBundle()
         frag3.setMacAddressListener(object : MacAddressListener {

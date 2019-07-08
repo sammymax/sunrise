@@ -12,7 +12,7 @@ import android.view.WindowManager
 import android.widget.Button
 import android.os.PowerManager
 
-class RingingAlarm : Activity() {
+class RingingAlarmActivity : Activity() {
     var off : Button? = null
     var mediaPlayer : MediaPlayer? = null
 

@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 import android.content.Intent
 import android.content.IntentFilter
+import android.widget.ImageView
 
 
 class ItemListActivity : AppCompatActivity() {
@@ -89,7 +90,8 @@ class ItemListActivity : AppCompatActivity() {
         RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
 
         private val onClickListener: View.OnClickListener
-        private val recyclerListTexts = listOf<String>("Set Color", "BPM Sync", "Sunrise Alarm", "Settings")
+        private val recyclerListIcons = listOf("ic_color_lens_white_24dp", "ic_music_note_white_24dp", "ic_wb_sunny_white_24dp", "ic_settings_white_24dp")
+        private val recyclerListTexts = listOf("Set Color", "BPM Sync", "Sunrise Alarm", "Settings")
 
         init {
             onClickListener = View.OnClickListener { v ->
@@ -104,7 +106,10 @@ class ItemListActivity : AppCompatActivity() {
         }
 
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-            holder.idView.text = position.toString()
+            val resourceName = recyclerListIcons[position]
+            holder.menuItemIcon.setImageResource(
+                parentActivity.resources.getIdentifier(resourceName, "drawable", parentActivity.packageName)
+            )
             holder.contentView.text = recyclerListTexts[position]
 
             with(holder.itemView) {
@@ -116,7 +121,7 @@ class ItemListActivity : AppCompatActivity() {
         override fun getItemCount() = recyclerListTexts.size
 
         inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-            val idView: TextView = view.id_text
+            val menuItemIcon: ImageView = view.menu_item_icon
             val contentView: TextView = view.content
         }
     }

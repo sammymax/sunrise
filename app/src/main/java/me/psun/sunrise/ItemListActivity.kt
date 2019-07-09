@@ -1,7 +1,9 @@
 package me.psun.sunrise
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.RecyclerView
 import android.view.LayoutInflater
@@ -13,9 +15,12 @@ import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
+import android.content.Intent
+
+
 
 class ItemListActivity : AppCompatActivity() {
-    var appState : AppState = AppState(this)
+    var appState : AppState? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -27,12 +32,12 @@ class ItemListActivity : AppCompatActivity() {
         appState = AppState(this, getPreferences(Context.MODE_PRIVATE))
         val frag0 = StaticFragment()
         val frag1 = BPMFragment()
-        val frag2 = SunriseFragment(appState)
+        val frag2 = SunriseFragment(appState!!)
         val frag3 = SettingsFragment()
-        frag3.arguments = appState.getSettingsBundle()
+        frag3.arguments = appState!!.getSettingsBundle()
         frag3.setMacAddressListener(object : MacAddressListener {
             override fun onMacAddressChange(mac: String) {
-                appState.settings_mac = mac
+                appState!!.settings_mac = mac
                 with (getPreferences(Context.MODE_PRIVATE).edit()) {
                     putString("settings.mac", mac)
                     commit()
@@ -46,6 +51,11 @@ class ItemListActivity : AppCompatActivity() {
             .add(R.id.item_detail_container, frag0, "frag0")
             .commit()
         setupRecyclerView(item_list)
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M && !Settings.canDrawOverlays(this)) {
+            val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
+            startActivity(myIntent)
+        }
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {
@@ -53,13 +63,13 @@ class ItemListActivity : AppCompatActivity() {
     }
 
     fun changeFragIdx(newIdx: Int) {
-        val oldId = "frag${appState.frag_idx}"
+        val oldId = "frag${appState!!.frag_idx}"
         val newId = "frag$newIdx"
         supportFragmentManager.beginTransaction()
             .hide(supportFragmentManager.findFragmentByTag(oldId) as Fragment)
             .show(supportFragmentManager.findFragmentByTag(newId) as Fragment)
             .commit()
-        appState.frag_idx = newIdx
+        appState!!.frag_idx = newIdx
     }
 
     class SimpleItemRecyclerViewAdapter(

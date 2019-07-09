@@ -33,7 +33,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         val showDialog = View.OnClickListener{_ ->
             val dialog = AlarmDialogFragment()
             dialog.setAlarmListener(object : AlarmListener{
-                override fun onChange(hour: Int, minute: Int, soundId: Int?) {
+                override fun onChange(hour: Int, minute: Int, spinnerIdx: Int) {
                     if (hour < 12) alarmAMPM?.text = "AM"
                     else alarmAMPM?.text = "PM"
 
@@ -42,7 +42,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
                     if (hour == 0) displayedHour = 12
                     alarmTimeShower?.text = "$displayedHour:${minute.toString().padStart(2, '0')}"
 
-                    appState.setSunrise(hour, minute, soundId)
+                    appState.setSunrise(hour, minute, spinnerIdx)
                     updateViewToState()
                 }
             })

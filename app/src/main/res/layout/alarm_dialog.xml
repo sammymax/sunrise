@@ -19,7 +19,7 @@
         <Spinner
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:id="@+id/alarm_spinner"
-                android:background="@android:drawable/btn_dropdown"/>
+                android:backgroundTint="#FFCCCCCC" android:backgroundTintMode="multiply"/>
     </LinearLayout>
     <LinearLayout
             android:orientation="horizontal"
@@ -33,6 +33,6 @@
                 android:text="Save"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/dialog_save" android:layout_weight="1"
-        />
+                android:backgroundTint="#FF008577" android:textColor="#FFFFFFFF"/>
     </LinearLayout>
 </LinearLayout>

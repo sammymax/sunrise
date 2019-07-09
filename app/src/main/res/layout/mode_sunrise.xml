@@ -33,13 +33,16 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/til_sunrise" android:layout_weight="1"
                 android:textSize="18sp"/>
-        <Button
-                android:text="Edit..."
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:id="@+id/edit_alarm"/>
     </LinearLayout>
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right|bottom"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="20dp" android:src="@drawable/ic_edit_black_24dp"
+            android:id="@+id/alarm_edit" android:elevation="10dp"/>
     <me.psun.sunrise.NoAlarmView
             android:id="@+id/no_alarm_overlay"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"/>
+            android:layout_height="match_parent" android:elevation="20dp"/>
 </FrameLayout>

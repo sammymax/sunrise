@@ -12,11 +12,11 @@
             <Button
                     android:text="TAP"
                     android:layout_width="wrap_content"
-                    android:layout_height="160dp" android:id="@+id/bpm_tap"/>
+                    android:layout_height="160dp" android:id="@+id/bpm_tap" android:textSize="18sp"/>
             <Button
                     android:text="SYNC"
                     android:layout_width="wrap_content"
-                    android:layout_height="160dp" android:id="@+id/bpm_sync"/>
+                    android:layout_height="160dp" android:id="@+id/bpm_sync" android:textSize="18sp"/>
         </TableRow>
         <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
             <Button
@@ -33,10 +33,10 @@
             android:text="Quantize"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/quantize" android:textSize="18sp"
-            android:switchPadding="10dp" android:paddingTop="10dp" android:paddingStart="2dp"/>
+            android:switchPadding="10dp" android:paddingTop="16dp" android:paddingStart="4dp"/>
     <TextView
             android:text="BPM: -"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/bpm_display" android:textSize="18sp"
-            android:paddingTop="10dp" android:paddingStart="2dp"/>
+            android:layout_height="wrap_content" android:id="@+id/bpm_display" android:textSize="30sp"
+            android:paddingTop="20dp" android:paddingStart="4dp" android:gravity="bottom"/>
 </LinearLayout>

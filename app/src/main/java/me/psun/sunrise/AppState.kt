@@ -18,10 +18,15 @@ class AppState(
     var static_rgb : Int = Color.BLACK
     var static_cw : Int = 0
     var static_ww : Int = 0
+    var sunrise_setState : AlarmSetState = AlarmSetState.NONE
     var sunrise_timeMillis : Long = 0
         get() = field
     var sunrise_soundId : Int? = 0
     var settings_mac : String = ""
+
+    enum class AlarmSetState {
+        NONE, PENDING, ACTIVE
+    }
 
     constructor(activity: Activity, prefs : SharedPreferences) : this(activity) {
         prefs.getString("settings.mac", "")?.let{ settings_mac = it}
@@ -37,12 +42,18 @@ class AppState(
         c.set(GregorianCalendar.SECOND, 0)
         c.set(GregorianCalendar.MILLISECOND, 0)
         sunrise_timeMillis = c.timeInMillis
+        sunrise_soundId = id
+        sunrise_setState = AlarmSetState.PENDING
 
         val alarm = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val intent = Intent(activity.applicationContext, RingingAlarmActivity::class.java)
         intent.putExtra("SongIdentifier", id ?: -1)
         val pendingIntent = PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-        alarm.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis + 2500, pendingIntent)
+        alarm.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+    }
+
+    fun delSunrise() {
+        sunrise_setState = AlarmSetState.NONE
     }
 
     fun getSettingsBundle() : Bundle {

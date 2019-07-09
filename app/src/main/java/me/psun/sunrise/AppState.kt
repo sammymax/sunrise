@@ -69,6 +69,10 @@ class AppState(
         sunrise_setState = AlarmSetState.NONE
     }
 
+    fun snoozeAlarm() {
+
+    }
+
     fun getSettingsBundle() : Bundle {
         val b = Bundle()
         b.putString("settings.mac", settings_mac)
@@ -90,5 +94,7 @@ class AppState(
         )
         val songNames = songDict.keys.toList()
         val NO_SOUND_ID = -1234567
+        val ALARM_OFF_ACTION = "me.psun.sunrise.ALARM_OFF"
+        val ALARM_OFF_ACTION_SNOOZE = "snooze"
     }
 }

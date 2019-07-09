@@ -2,6 +2,7 @@ package me.psun.sunrise
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.media.MediaPlayer
 import android.os.Build
 import android.os.Bundle
@@ -57,16 +58,20 @@ class RingingAlarmActivity : Activity() {
 
         off = findViewById(R.id.alarm_off)
         off?.setOnClickListener{_ ->
-            stopAlarm()
+            stopAlarm(false)
         }
     }
 
-    fun stopAlarm () {
+    fun stopAlarm (snooze: Boolean) {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
         wakelock?.release()
         wakelock = null
-        finish()
+
+        val intent = Intent(AppState.ALARM_OFF_ACTION)
+        intent.putExtra(AppState.ALARM_OFF_ACTION_SNOOZE, snooze)
+        sendBroadcast(intent)
+        finishAndRemoveTask()
     }
 }

@@ -70,7 +70,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         return view
     }
 
-    private fun updateViewToState() {
+    fun updateViewToState() {
         if (appState.sunrise_setState == AppState.AlarmSetState.NONE) {
             noAlarmOverlay?.visibility = View.VISIBLE
             return

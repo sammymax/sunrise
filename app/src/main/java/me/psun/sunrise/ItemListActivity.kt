@@ -1,5 +1,6 @@
 package me.psun.sunrise
 
+import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -16,11 +17,12 @@ import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 import android.content.Intent
-
+import android.content.IntentFilter
 
 
 class ItemListActivity : AppCompatActivity() {
     var appState : AppState? = null
+    var sunriseFragment: SunriseFragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,7 +34,7 @@ class ItemListActivity : AppCompatActivity() {
         appState = AppState(this, getPreferences(Context.MODE_PRIVATE))
         val frag0 = StaticFragment()
         val frag1 = BPMFragment()
-        val frag2 = SunriseFragment(appState!!)
+        sunriseFragment = SunriseFragment(appState!!)
         val frag3 = SettingsFragment()
         frag3.arguments = appState!!.getSettingsBundle()
         frag3.setMacAddressListener(object : MacAddressListener {
@@ -46,7 +48,7 @@ class ItemListActivity : AppCompatActivity() {
         })
         supportFragmentManager.beginTransaction()
             .add(R.id.item_detail_container, frag3, "frag3").hide(frag3)
-            .add(R.id.item_detail_container, frag2, "frag2").hide(frag2)
+            .add(R.id.item_detail_container, sunriseFragment!!, "frag2").hide(sunriseFragment!!)
             .add(R.id.item_detail_container, frag1, "frag1").hide(frag1)
             .add(R.id.item_detail_container, frag0, "frag0")
             .commit()
@@ -56,6 +58,15 @@ class ItemListActivity : AppCompatActivity() {
             val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             startActivity(myIntent)
         }
+        registerReceiver(object : BroadcastReceiver() {
+            override fun onReceive(context: Context?, intent: Intent?) {
+                val shouldSnooze = intent?.extras?.getBoolean(AppState.ALARM_OFF_ACTION_SNOOZE, false)
+                appState?.delSunrise()
+                if (shouldSnooze == true)
+                    appState?.snoozeAlarm()
+                sunriseFragment?.updateViewToState()
+            }
+        }, IntentFilter(AppState.ALARM_OFF_ACTION))
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {

@@ -2,7 +2,6 @@ package me.psun.sunrise
 
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -19,8 +18,8 @@ class StaticFragment : Fragment() {
     private var colorText : TextView? = null
     private var rgbPreview : View? = null
 
-    private var coldBar : DiscreteSlider? = null
-    private var warmBar : DiscreteSlider? = null
+    private var coldBar : DiscreteSliderView? = null
+    private var warmBar : DiscreteSliderView? = null
     private var cw = 0
     private var ww = 0
     private var allOff : Button? = null

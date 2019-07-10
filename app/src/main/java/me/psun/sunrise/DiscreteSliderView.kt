@@ -6,7 +6,7 @@ import android.widget.LinearLayout
 import android.widget.SeekBar
 import android.widget.TextView
 
-class DiscreteSlider : LinearLayout {
+class DiscreteSliderView : LinearLayout {
     constructor (context: Context) : super(context)
     constructor (context: Context, attrs: AttributeSet?) : super(context, attrs)
     constructor (context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)

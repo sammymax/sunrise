@@ -63,15 +63,15 @@
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="match_parent" android:layout_marginLeft="30dp">
-        <me.psun.sunrise.DiscreteSlider
+        <me.psun.sunrise.DiscreteSliderView
                 android:id="@+id/coldSlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_marginBottom="30dp"/>
-        <me.psun.sunrise.DiscreteSlider
+        <me.psun.sunrise.DiscreteSliderView
                 android:id="@+id/warmSlider"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content">
-        </me.psun.sunrise.DiscreteSlider>
+        </me.psun.sunrise.DiscreteSliderView>
         <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_weight="1"/>

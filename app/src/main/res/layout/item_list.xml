@@ -9,7 +9,7 @@
               android:baselineAligned="false"
               android:divider="?android:attr/dividerHorizontal"
               android:showDividers="middle"
-              tools:context=".ItemListActivity">
+              tools:context=".RootActivity">
 
     <!--
     This layout is a two-pane layout for the Items
@@ -24,7 +24,7 @@
                                                android:layout_marginLeft="0dp"
                                                android:layout_marginRight="0dp"
                                                app:layoutManager="LinearLayoutManager"
-                                               tools:context="me.psun.sunrise.ItemListActivity"
+                                               tools:context="me.psun.sunrise.RootActivity"
                                                tools:listitem="@layout/item_list_content"
                                                android:background="#A3009688" android:paddingLeft="8dp"
                                                android:paddingRight="8dp"/>

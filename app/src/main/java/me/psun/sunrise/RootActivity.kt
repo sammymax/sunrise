@@ -21,7 +21,7 @@ import android.content.IntentFilter
 import android.widget.ImageView
 
 
-class ItemListActivity : AppCompatActivity() {
+class RootActivity : AppCompatActivity() {
     var appState : AppState? = null
     var sunriseFragment: SunriseFragment? = null
 
@@ -85,7 +85,7 @@ class ItemListActivity : AppCompatActivity() {
     }
 
     class SimpleItemRecyclerViewAdapter(
-        private val parentActivity: ItemListActivity
+        private val parentActivity: RootActivity
     ) :
         RecyclerView.Adapter<SimpleItemRecyclerViewAdapter.ViewHolder>() {
 

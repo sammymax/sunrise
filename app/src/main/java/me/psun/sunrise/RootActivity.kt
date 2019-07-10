@@ -19,11 +19,14 @@ import kotlinx.android.synthetic.main.item_list.*
 import android.content.Intent
 import android.content.IntentFilter
 import android.widget.ImageView
+import me.psun.sunrise.colorio.ColorListener
+import me.psun.sunrise.colorio.LoggingColorListener
 
 
 class RootActivity : AppCompatActivity() {
     var appState : AppState? = null
     var sunriseFragment: SunriseFragment? = null
+    val loggingColorListener = LoggingColorListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -32,9 +35,33 @@ class RootActivity : AppCompatActivity() {
         setSupportActionBar(toolbar)
         toolbar.title = title
 
-        appState = AppState(this, getPreferences(Context.MODE_PRIVATE))
-        val frag0 = StaticFragment()
-        val frag1 = BPMFragment()
+        val bpmFragment = BPMFragment()
+        bpmFragment.setBeatListener(object : BeatListener{
+            override fun BPMChange(bpm: Double) {
+                appState?.bpmChange(bpm)
+            }
+
+            override fun BPMSync() {
+                appState?.bpmSync()
+            }
+        })
+        appState = AppState(this, object : ColorListener{
+            override fun setRGB(rgb: Int, source: AppState.ColorSetSource) {
+                if (source == AppState.ColorSetSource.BPM)
+                    bpmFragment.setPreviewRGB(rgb)
+                loggingColorListener.setRGB(rgb, source)
+            }
+
+            override fun setCW(cw: Int, source: AppState.ColorSetSource) {
+                loggingColorListener.setCW(cw, source)
+            }
+
+            override fun setWW(ww: Int, source: AppState.ColorSetSource) {
+                loggingColorListener.setWW(ww, source)
+            }
+
+        },getPreferences(Context.MODE_PRIVATE))
+        val staticFragment = StaticFragment()
         sunriseFragment = SunriseFragment(appState!!)
         val frag3 = SettingsFragment()
         frag3.arguments = appState!!.getSettingsBundle()
@@ -50,8 +77,8 @@ class RootActivity : AppCompatActivity() {
         supportFragmentManager.beginTransaction()
             .add(R.id.item_detail_container, frag3, "frag3").hide(frag3)
             .add(R.id.item_detail_container, sunriseFragment!!, "frag2").hide(sunriseFragment!!)
-            .add(R.id.item_detail_container, frag1, "frag1").hide(frag1)
-            .add(R.id.item_detail_container, frag0, "frag0")
+            .add(R.id.item_detail_container, bpmFragment, "frag1").hide(bpmFragment)
+            .add(R.id.item_detail_container, staticFragment, "frag0")
             .commit()
         setupRecyclerView(item_list)
 

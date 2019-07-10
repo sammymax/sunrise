@@ -10,6 +10,8 @@ import android.widget.Button
 import android.widget.Switch
 import android.widget.TextView
 import androidx.collection.CircularArray
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class BPMFragment : Fragment() {
     var bpm_tap : Button? = null
@@ -19,6 +21,7 @@ class BPMFragment : Fragment() {
 
     var quantize : Switch? = null
     var bpm_show : TextView? = null
+    var bpm_preview : TextView? = null
 
     val taps  = CircularArray<Long>()
     // output bpm = calculated bpm * (2 ^ bpm_exp)
@@ -37,6 +40,7 @@ class BPMFragment : Fragment() {
         bpm_double = view.findViewById(R.id.bpm_double)
         quantize = view.findViewById(R.id.quantize)
         bpm_show = view.findViewById(R.id.bpm_display)
+        bpm_preview = view.findViewById(R.id.bpm_preview)
 
         bpm_tap?.setOnClickListener{_ ->
             taps.addLast(SystemClock.elapsedRealtime())
@@ -76,9 +80,9 @@ class BPMFragment : Fragment() {
                 // time was in ms; 0.001 to get to seconds
                 val duration = 0.001 * (taps.last - taps.first)
                 val numBeats = taps.size() - 1.0
-                val multiplier = Math.pow(2.0, bpm_exp.toDouble())
+                val multiplier = 2.0.pow(bpm_exp.toDouble())
                 val bpm = 60.0 * multiplier * numBeats / duration
-                if (quant) Math.round(bpm).toDouble()
+                if (quant) bpm.roundToInt().toDouble()
                 else bpm
             }
         }
@@ -89,5 +93,10 @@ class BPMFragment : Fragment() {
 
     fun setBeatListener(bl : BeatListener) {
         listener = bl
+    }
+
+    fun setPreviewRGB(rgb: Int) {
+        bpm_preview?.setBackgroundColor(0xFF000000.toInt() or rgb)
+        bpm_preview?.setTextColor(rgb.inv())
     }
 }

@@ -1,42 +1,59 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="vertical"
-              android:layout_width="match_parent"
-              android:layout_height="match_parent" android:padding="@dimen/detail_padding">
+<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             android:stretchColumns="*"
+             android:padding="@dimen/detail_padding">
 
-    <TableLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:stretchColumns="*">
-
-        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-            <Button
-                    android:text="TAP"
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+        <Button
+                android:text="TAP"
+                android:layout_width="0dp"
+                android:layout_height="160dp" android:id="@+id/bpm_tap" android:textSize="18sp"/>
+        <Button
+                android:text="SYNC"
+                android:layout_width="0dp"
+                android:layout_height="160dp" android:id="@+id/bpm_sync" android:textSize="18sp"/>
+    </TableRow>
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
+        <Button
+                android:text="Halve BPM"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/bpm_halve"/>
+        <Button
+                android:text="Double BPM"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content" android:id="@+id/bpm_double"/>
+    </TableRow>
+    <TableRow android:layout_width="match_parent" android:layout_height="match_parent" android:layout_marginTop="5dp"
+              android:layout_weight="1">
+        <LinearLayout android:orientation="vertical"
+                      android:layout_width="0dp"
+                      android:layout_height="match_parent" android:gravity="center_horizontal|center_vertical"
+        >
+            <TextView
+                    android:text="BPM: -"
                     android:layout_width="wrap_content"
-                    android:layout_height="160dp" android:id="@+id/bpm_tap" android:textSize="18sp"/>
-            <Button
-                    android:text="SYNC"
+                    android:layout_height="wrap_content" android:id="@+id/bpm_display" android:textSize="30sp"
+                    android:paddingTop="20dp" android:paddingStart="4dp" android:gravity="bottom"/>
+            <Switch
+                    android:text="Quantize"
                     android:layout_width="wrap_content"
-                    android:layout_height="160dp" android:id="@+id/bpm_sync" android:textSize="18sp"/>
-        </TableRow>
-        <TableRow android:layout_width="match_parent" android:layout_height="match_parent">
-            <Button
-                    android:text="Halve BPM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/bpm_halve"/>
-            <Button
-                    android:text="Double BPM"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" android:id="@+id/bpm_double"/>
-        </TableRow>
-    </TableLayout>
-    <Switch
-            android:text="Quantize"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/quantize" android:textSize="18sp"
-            android:switchPadding="10dp" android:paddingTop="16dp" android:paddingStart="4dp"/>
-    <TextView
-            android:text="BPM: -"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" android:id="@+id/bpm_display" android:textSize="30sp"
-            android:paddingTop="20dp" android:paddingStart="4dp" android:gravity="bottom"/>
-</LinearLayout>
+                    android:layout_height="wrap_content" android:id="@+id/quantize" android:textSize="18sp"
+                    android:switchPadding="10dp" android:paddingTop="16dp" android:paddingStart="4dp"/>
+        </LinearLayout>
+        <FrameLayout
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_margin="5dp"
+                android:background="#FF000000">
+            <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent" android:id="@+id/bpm_preview"
+                    android:layout_margin="1dp"
+                    android:text="Preview"
+                    android:gravity="center"
+                    android:background="#FFFFFFFF"/>
+        </FrameLayout>
+    </TableRow>
+</TableLayout>

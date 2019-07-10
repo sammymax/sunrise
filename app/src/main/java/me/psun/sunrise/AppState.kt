@@ -8,10 +8,14 @@ import android.content.Intent
 import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Handler
+import me.psun.sunrise.colorio.ColorListener
 import java.util.*
+import kotlin.math.roundToLong
 
 class AppState(
-    private val activity : Activity
+    private val activity : Activity,
+    private val colorListener : ColorListener
 ) {
     private val songToIdentifier : Map<String, Int>
 
@@ -19,17 +23,41 @@ class AppState(
     var static_rgb : Int = Color.BLACK
     var static_cw : Int = 0
     var static_ww : Int = 0
+    private var bpm_msPerBeat : Long = 1000000
+    private var bpm_syncMillis : Long = 0
+    private val bpm_handler = Handler()
+    private var bpm_beatCount = 0
+    private var bpm_subBeatCount = 0
+    private var bpm_subdivide = 1
     var sunrise_setState : AlarmSetState = AlarmSetState.NONE
     var sunrise_timeMillis : Long = 0
         get() = field
     var sunrise_spinnerIdx : Int = 0
     var settings_mac : String = ""
 
+    private val bpmRunnable = object : Runnable {
+        val colors = listOf(0xC8B4BA, 0xF3DDB3, 0xC1CD97, 0xE18D96)
+        override fun run() {
+            if (++bpm_subBeatCount == bpm_subdivide) {
+                bpm_beatCount++
+                bpm_subBeatCount = 0
+            }
+            colorListener.setRGB(colors[bpm_beatCount and 3], ColorSetSource.BPM)
+
+            val msTilNextBeat = bpm_msPerBeat - (System.currentTimeMillis() % bpm_msPerBeat)
+            bpm_handler.postDelayed(this, msTilNextBeat)
+        }
+    }
+
     enum class AlarmSetState {
         NONE, PENDING, ACTIVE
     }
 
-    constructor(activity: Activity, prefs : SharedPreferences) : this(activity) {
+    enum class ColorSetSource {
+        STATIC, BPM, SUNRISE
+    }
+
+    constructor(activity: Activity, colorListener: ColorListener, prefs : SharedPreferences) : this(activity, colorListener) {
         prefs.getString("settings.mac", "")?.let{ settings_mac = it}
     }
 
@@ -37,6 +65,19 @@ class AppState(
         songToIdentifier = songDict.mapValues { (_, value) ->
             activity.resources.getIdentifier(value, "raw", activity.packageName)
         }
+    }
+
+    fun bpmChange(bpm: Double) {
+        if (bpm_msPerBeat > 1e4) bpm_syncMillis = System.currentTimeMillis()
+        bpm_msPerBeat = (60000.0 / bpm).roundToLong()
+        bpm_handler.removeCallbacks(bpmRunnable)
+        bpm_handler.postDelayed(bpmRunnable, bpm_msPerBeat)
+    }
+
+    fun bpmSync() {
+        bpm_syncMillis = System.currentTimeMillis()
+        bpm_handler.removeCallbacks(bpmRunnable)
+        bpm_handler.postDelayed(bpmRunnable, bpm_msPerBeat)
     }
 
     fun setSunrise(hour: Int, minute: Int, idx: Int) {

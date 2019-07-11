@@ -18,6 +18,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
     private var editButton : FloatingActionButton? = null
     private var tilSunrise : TextView? = null
     private var noAlarmOverlay : NoAlarmView? = null
+    private var isAlarmSound : TextView? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -30,6 +31,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         alarmAMPM = view.findViewById(R.id.alarm_am_pm)
         tilSunrise = view.findViewById(R.id.til_sunrise)
         noAlarmOverlay = view.findViewById(R.id.no_alarm_overlay)
+        isAlarmSound = view.findViewById(R.id.is_alarm_sound)
 
         if (appState.sunrise_pending) {
             val hourMinute = getHourMinuteFromTimeStamp(appState.sunrise_timeMillis)
@@ -76,6 +78,11 @@ class SunriseFragment(val appState: AppState) : Fragment() {
             noAlarmOverlay?.visibility = View.VISIBLE
             return
         }
+        if (appState.sunrise_spinnerIdx == 0)
+            isAlarmSound?.text = "off"
+        else
+            isAlarmSound?.text = "on"
+
         noAlarmOverlay?.visibility = View.INVISIBLE
         val millisLeft = appState.sunrise_timeMillis - System.currentTimeMillis()
         val hoursLeft = millisLeft / (60 * 60 * 1000)

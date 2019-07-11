@@ -20,9 +20,9 @@ class AppState(
     private val songToIdentifier : Map<String, Int>
 
     var frag_idx : Int = 0
-    var static_rgb : Int = Color.BLACK
-    var static_cw : Int = 0
-    var static_ww : Int = 0
+    private var static_rgb : Int = Color.BLACK
+    private var static_cw : Int = 0
+    private var static_ww : Int = 0
     private var bpm_msPerBeat : Long = 1000000
     private var bpm_syncMillis : Long = 0
     private val bpm_handler = Handler()
@@ -65,6 +65,18 @@ class AppState(
         songToIdentifier = songDict.mapValues { (_, value) ->
             activity.resources.getIdentifier(value, "raw", activity.packageName)
         }
+    }
+
+    fun staticSetRGB(rgb: Int) {
+        static_rgb = rgb
+    }
+
+    fun staticSetCW(cw: Int) {
+        static_cw = cw
+    }
+
+    fun staticSetWW(ww: Int) {
+        static_ww = ww
     }
 
     fun bpmChange(bpm: Double) {

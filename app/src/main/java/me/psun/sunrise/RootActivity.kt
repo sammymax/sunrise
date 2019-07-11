@@ -61,7 +61,7 @@ class RootActivity : AppCompatActivity() {
             }
 
         },getPreferences(Context.MODE_PRIVATE))
-        val staticFragment = StaticFragment()
+        val staticFragment = StaticFragment(appState!!)
         sunriseFragment = SunriseFragment(appState!!)
         val frag3 = SettingsFragment()
         frag3.arguments = appState!!.getSettingsBundle()

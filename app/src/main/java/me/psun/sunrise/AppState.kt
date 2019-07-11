@@ -29,10 +29,12 @@ class AppState(
     private var bpm_beatCount = 0
     private var bpm_subBeatCount = 0
     private var bpm_subdivide = 1
-    var sunrise_setState : AlarmSetState = AlarmSetState.NONE
+    var sunrise_pending : Boolean = false
+        private set
     var sunrise_timeMillis : Long = 0
-        get() = field
+        private set
     var sunrise_spinnerIdx : Int = 0
+        private set
     var settings_mac : String = ""
 
     private val bpmRunnable = object : Runnable {
@@ -47,10 +49,6 @@ class AppState(
             val msTilNextBeat = bpm_msPerBeat - (System.currentTimeMillis() % bpm_msPerBeat)
             bpm_handler.postDelayed(this, msTilNextBeat)
         }
-    }
-
-    enum class AlarmSetState {
-        NONE, PENDING, ACTIVE
     }
 
     enum class ColorSetSource {
@@ -103,7 +101,7 @@ class AppState(
         c.set(GregorianCalendar.MILLISECOND, 0)
         sunrise_timeMillis = c.timeInMillis
         sunrise_spinnerIdx = idx
-        sunrise_setState = AlarmSetState.PENDING
+        sunrise_pending = true
 
         val id = when(idx) {
             0 -> NO_SOUND_ID
@@ -119,7 +117,7 @@ class AppState(
     }
 
     fun delSunrise() {
-        sunrise_setState = AlarmSetState.NONE
+        sunrise_pending = false
     }
 
     fun snoozeAlarm() {

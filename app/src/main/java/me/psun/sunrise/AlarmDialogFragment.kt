@@ -8,7 +8,11 @@ import android.view.ViewGroup
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 
-class AlarmDialogFragment : DialogFragment() {
+class AlarmDialogFragment(
+    val suggestedHour: Int,
+    val suggestedMinute: Int,
+    val spinnerIdx: Int
+) : DialogFragment() {
     private var buttonCancel : Button? = null
     private var buttonSave : Button? = null
     private var timePicker : TimePicker? = null
@@ -22,6 +26,14 @@ class AlarmDialogFragment : DialogFragment() {
         timePicker = view.findViewById(R.id.timePicker)
         alarmSpinner = view.findViewById(R.id.alarm_spinner)
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            timePicker?.hour = suggestedHour
+            timePicker?.minute = suggestedMinute
+        } else {
+            timePicker?.currentHour = suggestedHour
+            timePicker?.currentMinute = suggestedMinute
+        }
+
         val spinnerArray = listOf("None", "Random") + AppState.songNames
         context?.let {
             val adapter = ArrayAdapter<String>(
@@ -29,6 +41,7 @@ class AlarmDialogFragment : DialogFragment() {
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)
             alarmSpinner?.adapter = adapter
+            alarmSpinner?.setSelection(spinnerIdx)
         }
 
         buttonCancel?.setOnClickListener{_ ->

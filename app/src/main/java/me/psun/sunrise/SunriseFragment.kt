@@ -9,6 +9,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
+import java.util.*
 
 class SunriseFragment(val appState: AppState) : Fragment() {
     private var alarmTimeShower : TextView? = null
@@ -30,18 +31,18 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         tilSunrise = view.findViewById(R.id.til_sunrise)
         noAlarmOverlay = view.findViewById(R.id.no_alarm_overlay)
 
+        if (appState.sunrise_pending) {
+            val hourMinute = getHourMinuteFromTimeStamp(appState.sunrise_timeMillis)
+            updateAlarmTime(hourMinute.first, hourMinute.second)
+        }
         val showDialog = View.OnClickListener{_ ->
-            val dialog = AlarmDialogFragment()
+            // show current time + 1 hour if adding alarm, existing alarm time if editing
+            val suggestedAlarmMillis = if (appState.sunrise_pending) appState.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
+            val hourMinute = getHourMinuteFromTimeStamp(suggestedAlarmMillis)
+            val dialog = AlarmDialogFragment(hourMinute.first, hourMinute.second, appState.sunrise_spinnerIdx)
             dialog.setAlarmListener(object : AlarmListener{
                 override fun onChange(hour: Int, minute: Int, spinnerIdx: Int) {
-                    if (hour < 12) alarmAMPM?.text = "AM"
-                    else alarmAMPM?.text = "PM"
-
-                    var displayedHour = hour
-                    if (hour > 12) displayedHour -= 12
-                    if (hour == 0) displayedHour = 12
-                    alarmTimeShower?.text = "$displayedHour:${minute.toString().padStart(2, '0')}"
-
+                    updateAlarmTime(hour, minute)
                     appState.setSunrise(hour, minute, spinnerIdx)
                     updateViewToState()
                 }
@@ -71,7 +72,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
     }
 
     fun updateViewToState() {
-        if (appState.sunrise_setState == AppState.AlarmSetState.NONE) {
+        if (!appState.sunrise_pending) {
             noAlarmOverlay?.visibility = View.VISIBLE
             return
         }
@@ -82,7 +83,23 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         tilSunrise?.text = "${hoursLeft} hours, ${minutesLeft} minutes until sunrise"
     }
 
+    private fun updateAlarmTime(hour: Int, minute: Int) {
+        if (hour < 12) alarmAMPM?.text = "AM"
+        else alarmAMPM?.text = "PM"
+
+        var displayedHour = hour
+        if (hour > 12) displayedHour -= 12
+        if (hour == 0) displayedHour = 12
+        alarmTimeShower?.text = "$displayedHour:${minute.toString().padStart(2, '0')}"
+    }
+
     private fun msTilNextMinute(): Long {
         return 60 * 1000 - System.currentTimeMillis() % (60 * 1000)
+    }
+
+    private fun getHourMinuteFromTimeStamp(ts: Long): Pair<Int, Int> {
+        val c = Calendar.getInstance()
+        c.timeInMillis = ts
+        return Pair(c.get(Calendar.HOUR_OF_DAY), c.get(Calendar.MINUTE))
     }
 }

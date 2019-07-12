@@ -83,16 +83,6 @@ class RingingAlarmActivity : Activity() {
                 idx++
             }
         }
-        showAlarm()
-    }
-
-    override fun onNewIntent(intent: Intent?) {
-        super.onNewIntent(intent)
-        val showAlarm = intent?.getBooleanExtra(AppState.ALARM_ON, false)
-        if (showAlarm == true) showAlarm()
-    }
-
-    private fun showAlarm() {
         val songId = intent.getIntExtra("SongIdentifier", AppState.NO_SOUND_ID)
         if (songId != AppState.NO_SOUND_ID) {
             mediaPlayer = MediaPlayer.create(this, songId)

@@ -117,7 +117,7 @@ class AppState(
 
     fun snoozeAlarm() {
         // snooze for 10 minutes
-        sunrise_timeMillis = System.currentTimeMillis() + 10 * 60 * 20
+        sunrise_timeMillis = System.currentTimeMillis() + 10 * 60 * 1000
         sunrise_pending = true
         val pendingIntent = createPendingAlarmIntent()
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)

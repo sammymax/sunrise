@@ -25,7 +25,8 @@
         </activity>
 
         <activity android:name=".RingingAlarmActivity"
-                  android:showOnLockScreen="true"/>
+                  android:showOnLockScreen="true"
+                  android:autoRemoveFromRecents="true"/>
     </application>
 
 </manifest>

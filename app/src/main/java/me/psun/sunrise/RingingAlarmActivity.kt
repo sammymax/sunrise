@@ -22,11 +22,6 @@ class RingingAlarmActivity : Activity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val songId = intent.getIntExtra("SongIdentifier", AppState.NO_SOUND_ID)
-        if (songId != AppState.NO_SOUND_ID) {
-            mediaPlayer = MediaPlayer.create(this, songId)
-            mediaPlayer?.isLooping = true
-        }
 
         requestWindowFeature(Window.FEATURE_NO_TITLE)
         window.addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN)
@@ -88,6 +83,21 @@ class RingingAlarmActivity : Activity() {
                 idx++
             }
         }
+        showAlarm()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        val showAlarm = intent?.getBooleanExtra(AppState.ALARM_ON, false)
+        if (showAlarm == true) showAlarm()
+    }
+
+    private fun showAlarm() {
+        val songId = intent.getIntExtra("SongIdentifier", AppState.NO_SOUND_ID)
+        if (songId != AppState.NO_SOUND_ID) {
+            mediaPlayer = MediaPlayer.create(this, songId)
+            mediaPlayer?.isLooping = true
+        }
 
         val pm = applicationContext.getSystemService(Context.POWER_SERVICE) as PowerManager
         wakelock = pm.newWakeLock(
@@ -98,16 +108,19 @@ class RingingAlarmActivity : Activity() {
         mediaPlayer?.start()
     }
 
-    fun stopAlarm (snooze: Boolean) {
+    private fun stopAlarm (snooze: Boolean) {
         mediaPlayer?.stop()
         mediaPlayer?.release()
         mediaPlayer = null
         wakelock?.release()
         wakelock = null
 
-        val intent = Intent(AppState.ALARM_OFF_ACTION)
-        intent.putExtra(AppState.ALARM_OFF_ACTION_SNOOZE, snooze)
-        sendBroadcast(intent)
-        finishAndRemoveTask()
+        val intent = Intent(this, RootActivity::class.java).apply {
+            putExtra(AppState.ALARM_OFF_ACTION_OFF, true)
+            putExtra(AppState.ALARM_OFF_ACTION_SNOOZE, snooze)
+            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+        }
+        startActivity(intent)
+        finish()
     }
 }

@@ -86,15 +86,29 @@ class RootActivity : AppCompatActivity() {
             val myIntent = Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION)
             startActivity(myIntent)
         }
-        registerReceiver(object : BroadcastReceiver() {
-            override fun onReceive(context: Context?, intent: Intent?) {
-                val shouldSnooze = intent?.extras?.getBoolean(AppState.ALARM_OFF_ACTION_SNOOZE, false)
-                appState?.delSunrise()
-                if (shouldSnooze == true)
-                    appState?.snoozeAlarm()
-                sunriseFragment?.updateViewToState()
-            }
-        }, IntentFilter(AppState.ALARM_OFF_ACTION))
+        intent?.let {
+            processIntent(intent)
+        }
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        intent?.let {
+            processIntent(it)
+        }
+    }
+
+    private fun processIntent(intent: Intent) {
+        val isAlarmOff = intent.extras?.getBoolean(AppState.ALARM_OFF_ACTION_OFF, false)
+        if (isAlarmOff != true) return
+
+        val shouldSnooze = intent.extras?.getBoolean(AppState.ALARM_OFF_ACTION_SNOOZE, false)
+        appState?.delSunrise()
+        if (shouldSnooze == true) {
+            appState?.snoozeAlarm()
+            sunriseFragment?.updateAlarmTime()
+        }
+        sunriseFragment?.updateViewToState()
     }
 
     private fun setupRecyclerView(recyclerView: RecyclerView) {

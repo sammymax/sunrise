@@ -33,10 +33,8 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         noAlarmOverlay = view.findViewById(R.id.no_alarm_overlay)
         isAlarmSound = view.findViewById(R.id.is_alarm_sound)
 
-        if (appState.sunrise_pending) {
-            val hourMinute = getHourMinuteFromTimeStamp(appState.sunrise_timeMillis)
-            updateAlarmTime(hourMinute.first, hourMinute.second)
-        }
+        if (appState.sunrise_pending) updateAlarmTime()
+
         val showDialog = View.OnClickListener{_ ->
             // show current time + 1 hour if adding alarm, existing alarm time if editing
             val suggestedAlarmMillis = if (appState.sunrise_pending) appState.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
@@ -44,8 +42,8 @@ class SunriseFragment(val appState: AppState) : Fragment() {
             val dialog = AlarmDialogFragment(hourMinute.first, hourMinute.second, appState.sunrise_spinnerIdx)
             dialog.setAlarmListener(object : AlarmListener{
                 override fun onChange(hour: Int, minute: Int, spinnerIdx: Int) {
-                    updateAlarmTime(hour, minute)
                     appState.setSunrise(hour, minute, spinnerIdx)
+                    updateAlarmTime()
                     updateViewToState()
                 }
             })
@@ -63,12 +61,13 @@ class SunriseFragment(val appState: AppState) : Fragment() {
                 .show()
         }
         val handler = Handler()
-        handler.postDelayed(object : Runnable {
+        // this runnable handles initial set up as well as keeping time til sunrise accurate
+        handler.post(object : Runnable {
             override fun run() {
                 updateViewToState()
                 handler.postDelayed(this, msTilNextMinute())
             }
-        }, msTilNextMinute())
+        })
 
         return view
     }
@@ -90,7 +89,11 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         tilSunrise?.text = "${hoursLeft} hours, ${minutesLeft} minutes until sunrise"
     }
 
-    private fun updateAlarmTime(hour: Int, minute: Int) {
+    fun updateAlarmTime() {
+        val hourMinutePair = getHourMinuteFromTimeStamp(appState.sunrise_timeMillis)
+        val hour = hourMinutePair.first
+        val minute = hourMinutePair.second
+
         if (hour < 12) alarmAMPM?.text = "AM"
         else alarmAMPM?.text = "PM"
 

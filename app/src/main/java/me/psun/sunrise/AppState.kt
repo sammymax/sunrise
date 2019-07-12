@@ -18,6 +18,7 @@ class AppState(
     private val colorListener : ColorListener
 ) {
     private val songToIdentifier : Map<String, Int>
+    private val alarmManager: AlarmManager
 
     var frag_idx : Int = 0
     private var static_rgb : Int = Color.BLACK
@@ -63,6 +64,7 @@ class AppState(
         songToIdentifier = songDict.mapValues { (_, value) ->
             activity.resources.getIdentifier(value, "raw", activity.packageName)
         }
+        alarmManager = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
     }
 
     fun staticSetRGB(rgb: Int) {
@@ -103,31 +105,45 @@ class AppState(
         sunrise_spinnerIdx = idx
         sunrise_pending = true
 
-        val id = when(idx) {
-            0 -> NO_SOUND_ID
-            1 -> songToIdentifier[songDict.keys.random()]
-            else -> songToIdentifier[songNames[idx - 2]]
-        }
-
-        val alarm = activity.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(activity.applicationContext, RingingAlarmActivity::class.java)
-        intent.putExtra("SongIdentifier", id)
-        val pendingIntent = PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-        alarm.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
+        val pendingIntent = createPendingAlarmIntent()
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
     }
 
     fun delSunrise() {
         sunrise_pending = false
+        val pendingIntent = createPendingAlarmIntent()
+        alarmManager.cancel(pendingIntent)
     }
 
     fun snoozeAlarm() {
-
+        // snooze for 10 minutes
+        sunrise_timeMillis = System.currentTimeMillis() + 10 * 60 * 20
+        sunrise_pending = true
+        val pendingIntent = createPendingAlarmIntent()
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
     }
 
     fun getSettingsBundle() : Bundle {
         val b = Bundle()
         b.putString("settings.mac", settings_mac)
         return b
+    }
+
+    private fun getSongIdentifier(): Int {
+        return when(sunrise_spinnerIdx) {
+            0 -> NO_SOUND_ID
+            1 -> songToIdentifier[songDict.keys.random()]
+            else -> songToIdentifier[songNames[sunrise_spinnerIdx - 2]]
+        }!!
+    }
+
+    private fun createPendingAlarmIntent(): PendingIntent {
+        val intent = Intent(activity.applicationContext, RingingAlarmActivity::class.java).apply {
+            putExtra(ALARM_ON, true)
+            putExtra("SongIdentifier", getSongIdentifier())
+            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+        }
+        return PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
     }
 
     companion object {
@@ -144,8 +160,9 @@ class AppState(
             "Android - Sunshower" to "sunshower"
         )
         val songNames = songDict.keys.toList()
-        val NO_SOUND_ID = -1234567
-        val ALARM_OFF_ACTION = "me.psun.sunrise.ALARM_OFF"
-        val ALARM_OFF_ACTION_SNOOZE = "snooze"
+        const val NO_SOUND_ID = -1234567
+        const val ALARM_ON = "alarm.show"
+        const val ALARM_OFF_ACTION_OFF = "alarm.off"
+        const val ALARM_OFF_ACTION_SNOOZE = "alarm.snooze"
     }
 }

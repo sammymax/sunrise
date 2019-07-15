@@ -60,7 +60,7 @@ class RootActivity : AppCompatActivity() {
                 loggingColorListener.setWW(ww, source)
             }
 
-        },getPreferences(Context.MODE_PRIVATE))
+        }, getPreferences(Context.MODE_PRIVATE))
         val staticFragment = StaticFragment(appState!!)
         sunriseFragment = SunriseFragment(appState!!)
         val frag3 = SettingsFragment()
@@ -68,10 +68,6 @@ class RootActivity : AppCompatActivity() {
         frag3.setMacAddressListener(object : MacAddressListener {
             override fun onMacAddressChange(mac: String) {
                 appState!!.settings_mac = mac
-                with (getPreferences(Context.MODE_PRIVATE).edit()) {
-                    putString("settings.mac", mac)
-                    commit()
-                }
             }
         })
         supportFragmentManager.beginTransaction()

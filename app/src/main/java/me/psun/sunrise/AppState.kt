@@ -31,12 +31,25 @@ class AppState(
     private var bpm_subBeatCount = 0
     private var bpm_subdivide = 1
     var sunrise_pending : Boolean = false
-        private set
+        private set(value) {
+            field = value
+            applyWrite("sunrise.pending", value)
+        }
     var sunrise_timeMillis : Long = 0
-        private set
+        private set(value) {
+            field = value
+            applyWrite("sunrise.timeMillis", value)
+        }
     var sunrise_spinnerIdx : Int = 0
-        private set
+        private set(value) {
+            field = value
+            applyWrite("sunrise.spinnerIdx", value)
+        }
     var settings_mac : String = ""
+        set(value) {
+            field = value
+            applyWrite("settings.mac", value)
+        }
 
     private val bpmRunnable = object : Runnable {
         val colors = listOf(0xC8B4BA, 0xF3DDB3, 0xC1CD97, 0xE18D96)
@@ -57,7 +70,10 @@ class AppState(
     }
 
     constructor(activity: Activity, colorListener: ColorListener, prefs : SharedPreferences) : this(activity, colorListener) {
-        prefs.getString("settings.mac", "")?.let{ settings_mac = it}
+        prefs.getString("settings.mac", "")?.let{ settings_mac = it }
+        sunrise_pending = prefs.getBoolean("sunrise.pending", false)
+        sunrise_timeMillis = prefs.getLong("sunrise.timeMillis", 0)
+        sunrise_spinnerIdx = prefs.getInt("sunrise.spinnerIdx", 0)
     }
 
     init {
@@ -117,7 +133,7 @@ class AppState(
 
     fun snoozeAlarm() {
         // snooze for 10 minutes
-        sunrise_timeMillis = System.currentTimeMillis() + 10 * 60 * 1000
+        sunrise_timeMillis = System.currentTimeMillis() + 3 * 60 * 100
         sunrise_pending = true
         val pendingIntent = createPendingAlarmIntent()
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
@@ -144,6 +160,19 @@ class AppState(
             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         }
         return PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+    }
+
+    private fun applyWrite(key: String, value: Any) {
+        with (activity.getPreferences(Context.MODE_PRIVATE).edit()) {
+            when (value) {
+                is Boolean -> putBoolean(key, value)
+                is Int -> putInt(key, value)
+                is Float -> putFloat(key, value)
+                is Long -> putLong(key, value)
+                is String -> putString(key, value)
+            }
+            apply()
+        }
     }
 
     companion object {

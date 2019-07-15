@@ -108,7 +108,7 @@ class RingingAlarmActivity : Activity() {
         val intent = Intent(this, RootActivity::class.java).apply {
             putExtra(AppState.ALARM_OFF_ACTION_OFF, true)
             putExtra(AppState.ALARM_OFF_ACTION_SNOOZE, snooze)
-            addFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP)
+            addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         }
         startActivity(intent)
         finish()

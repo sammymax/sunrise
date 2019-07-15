@@ -66,12 +66,13 @@
         <me.psun.sunrise.DiscreteSliderView
                 android:id="@+id/coldSlider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_marginBottom="30dp"/>
+                android:layout_height="wrap_content" android:layout_marginBottom="30dp"
+                app:labelText="Cold White Level (0-255):"/>
         <me.psun.sunrise.DiscreteSliderView
                 android:id="@+id/warmSlider"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-        </me.psun.sunrise.DiscreteSliderView>
+                android:layout_height="wrap_content"
+                app:labelText="Warm White Level (0-255):"/>
         <Space
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content" android:layout_weight="1"/>

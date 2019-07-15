@@ -8,9 +8,8 @@ import android.widget.TextView
 
 class DiscreteSliderView : LinearLayout {
     constructor (context: Context) : super(context)
-    constructor (context: Context, attrs: AttributeSet?) : super(context, attrs)
-    constructor (context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
-    constructor (context: Context, attrs: AttributeSet?, defStyle: Int, defStyleRes: Int) : super(context, attrs, defStyle, defStyleRes)
+    constructor (context: Context, attrs: AttributeSet?) : super(context, attrs) { getText(attrs, 0) }
+    constructor (context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle) { getText(attrs, defStyle) }
 
     private val label : TextView
     private val level : TextView
@@ -47,5 +46,11 @@ class DiscreteSliderView : LinearLayout {
     fun setDiscreteValue(v : Int) {
         level.text = v.toString()
         bar.progress = v
+    }
+
+    private fun getText(attrs: AttributeSet?, defStyle: Int) {
+        context.theme.obtainStyledAttributes(attrs, R.styleable.DiscreteSliderView, defStyle, 0).let {
+            label?.text = it.getString(R.styleable.DiscreteSliderView_labelText)
+        }
     }
 }

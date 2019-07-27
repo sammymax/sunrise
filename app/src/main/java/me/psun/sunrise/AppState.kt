@@ -20,7 +20,7 @@ class AppState(
     private val songToIdentifier : Map<String, Int>
     private val alarmManager: AlarmManager
 
-    var frag_idx : Int = 0
+    var fragIdx : Int = 0
     private var static_rgb : Int = Color.BLACK
     private var static_cw : Int = 0
     private var static_ww : Int = 0
@@ -52,7 +52,7 @@ class AppState(
         }
 
     private val bpmRunnable = object : Runnable {
-        val colors = listOf(0xC8B4BA, 0xF3DDB3, 0xC1CD97, 0xE18D96)
+        val colors = listOf(0xFF0000, 0x00FF00, 0xFFA500, 0x0000FF)
         override fun run() {
             if (++bpm_subBeatCount == bpm_subdivide) {
                 bpm_beatCount++
@@ -84,6 +84,7 @@ class AppState(
     }
 
     fun staticSetRGB(rgb: Int) {
+        bpm_handler.removeCallbacks(bpmRunnable)
         static_rgb = rgb
         colorListener.setRGB(static_rgb, ColorSetSource.STATIC)
         colorListener.setCW(static_cw, ColorSetSource.STATIC)
@@ -91,10 +92,12 @@ class AppState(
     }
 
     fun staticSetCW(cw: Int) {
+        bpm_handler.removeCallbacks(bpmRunnable)
         static_cw = cw
     }
 
     fun staticSetWW(ww: Int) {
+        bpm_handler.removeCallbacks(bpmRunnable)
         static_ww = ww
     }
 

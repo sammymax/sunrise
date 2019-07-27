@@ -110,13 +110,13 @@ class RootActivity : AppCompatActivity() {
     }
 
     fun changeFragIdx(newIdx: Int) {
-        val oldId = "frag${appState!!.frag_idx}"
+        val oldId = "frag${appState!!.fragIdx}"
         val newId = "frag$newIdx"
         supportFragmentManager.beginTransaction()
             .hide(supportFragmentManager.findFragmentByTag(oldId) as Fragment)
             .show(supportFragmentManager.findFragmentByTag(newId) as Fragment)
             .commit()
-        appState!!.frag_idx = newIdx
+        appState!!.fragIdx = newIdx
     }
 
     class SimpleItemRecyclerViewAdapter(

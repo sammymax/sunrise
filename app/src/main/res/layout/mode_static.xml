@@ -48,7 +48,7 @@
                 android:layout_height="361dp"
                 app:palette="@drawable/palette"
                 app:selector="@drawable/wheel"
-                app:actionMode="last"
+                app:actionMode="always"
                 app:preferenceName="staticColorPicker" android:layout_marginTop="10dp"/>
         <com.skydoves.colorpickerview.sliders.BrightnessSlideBar
                 android:id="@+id/brightnessSlide"

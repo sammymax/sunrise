@@ -85,6 +85,9 @@ class AppState(
 
     fun staticSetRGB(rgb: Int) {
         static_rgb = rgb
+        colorListener.setRGB(static_rgb, ColorSetSource.STATIC)
+        colorListener.setCW(static_cw, ColorSetSource.STATIC)
+        colorListener.setWW(static_ww, ColorSetSource.STATIC)
     }
 
     fun staticSetCW(cw: Int) {

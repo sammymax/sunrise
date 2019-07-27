@@ -24,7 +24,7 @@ import me.psun.sunrise.colorio.H801ColorListener
 class RootActivity : AppCompatActivity() {
     var appState : AppState? = null
     var sunriseFragment: SunriseFragment? = null
-    val colorListener = H801ColorListener()
+    val colorListener = H801ColorListener{appState?.settings_mac!!}
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

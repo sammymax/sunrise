@@ -1,6 +1,5 @@
 package me.psun.sunrise
 
-import android.content.BroadcastReceiver
 import android.content.Context
 import android.os.Build
 import android.os.Bundle
@@ -17,16 +16,15 @@ import kotlinx.android.synthetic.main.activity_item_list.*
 import kotlinx.android.synthetic.main.item_list_content.view.*
 import kotlinx.android.synthetic.main.item_list.*
 import android.content.Intent
-import android.content.IntentFilter
 import android.widget.ImageView
 import me.psun.sunrise.colorio.ColorListener
-import me.psun.sunrise.colorio.LoggingColorListener
+import me.psun.sunrise.colorio.H801ColorListener
 
 
 class RootActivity : AppCompatActivity() {
     var appState : AppState? = null
     var sunriseFragment: SunriseFragment? = null
-    val loggingColorListener = LoggingColorListener()
+    val colorListener = H801ColorListener()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,15 +47,15 @@ class RootActivity : AppCompatActivity() {
             override fun setRGB(rgb: Int, source: AppState.ColorSetSource) {
                 if (source == AppState.ColorSetSource.BPM)
                     bpmFragment.setPreviewRGB(rgb)
-                loggingColorListener.setRGB(rgb, source)
+                colorListener.setRGB(rgb, source)
             }
 
             override fun setCW(cw: Int, source: AppState.ColorSetSource) {
-                loggingColorListener.setCW(cw, source)
+                colorListener.setCW(cw, source)
             }
 
             override fun setWW(ww: Int, source: AppState.ColorSetSource) {
-                loggingColorListener.setWW(ww, source)
+                colorListener.setWW(ww, source)
             }
 
         }, getPreferences(Context.MODE_PRIVATE))

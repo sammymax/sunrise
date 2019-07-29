@@ -93,6 +93,11 @@ class RootActivity : AppCompatActivity() {
     }
 
     private fun processIntent(intent: Intent) {
+        val isSunriseUpdate = intent.extras?.getBoolean(AppState.SUNRISE_UPDATE, false)
+        if (isSunriseUpdate == true) {
+            appState?.updateSunriseBrightness()
+        }
+
         val isAlarmOff = intent.extras?.getBoolean(AppState.ALARM_OFF_ACTION_OFF, false)
         if (isAlarmOff != true) return
 

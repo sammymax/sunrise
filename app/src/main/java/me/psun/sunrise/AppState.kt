@@ -9,8 +9,11 @@ import android.content.SharedPreferences
 import android.graphics.Color
 import android.os.Bundle
 import android.os.Handler
+import android.util.Log
 import me.psun.sunrise.colorio.ColorListener
 import java.util.*
+import kotlin.math.max
+import kotlin.math.min
 import kotlin.math.roundToLong
 
 class AppState(
@@ -135,12 +138,15 @@ class AppState(
 
         val pendingIntent = createPendingAlarmIntent()
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
+        updateSunriseBrightness()
     }
 
     fun delSunrise() {
         sunrise_pending = false
         val pendingIntent = createPendingAlarmIntent()
         alarmManager.cancel(pendingIntent)
+        val sunriseIntent = createSunriseIntent()
+        alarmManager.cancel(sunriseIntent)
     }
 
     fun snoozeAlarm() {
@@ -174,6 +180,41 @@ class AppState(
         return PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
     }
 
+    private fun createSunriseIntent(): PendingIntent {
+        val intent = Intent(activity.applicationContext, RootActivity::class.java).apply {
+            putExtra(SUNRISE_UPDATE, true)
+        }
+        return PendingIntent.getActivity(activity.applicationContext, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+    }
+
+    fun updateSunriseBrightness() {
+        val currentMs = GregorianCalendar().timeInMillis
+        val progress = 1.0 - (sunrise_timeMillis - currentMs).toDouble() / SUNRISE_MS
+        Log.e("progress", progress.toString())
+        if (progress > 0) {
+            val finalRGB = 0x250900
+            bpm_handler.removeCallbacks(bpmRunnable)
+            if (progress < 0.8) {
+                colorListener.setCW(0, ColorSetSource.SUNRISE)
+                colorListener.setWW(0, ColorSetSource.SUNRISE)
+                val r = ((finalRGB shr 16) * progress * 1.25).toInt()
+                val g = (((finalRGB shr 8) and 255) * progress * 1.25).toInt()
+                val b = ((finalRGB and 255) * progress * 1.25).toInt()
+                colorListener.setRGB((r shl 16) or (g shl 8) or b, ColorSetSource.SUNRISE)
+            } else {
+                val curWarm = min(48, ((progress - 0.8) * 5 * 48).toInt())
+                colorListener.setRGB(finalRGB, ColorSetSource.SUNRISE)
+                colorListener.setCW(0, ColorSetSource.SUNRISE)
+                colorListener.setWW(curWarm, ColorSetSource.SUNRISE)
+            }
+        }
+
+        if (progress > 1.0) return
+        val sunriseIntent = createSunriseIntent()
+        val nextUpdateTime = max(sunrise_timeMillis - SUNRISE_MS, currentMs + 15 * 1000)
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, nextUpdateTime, sunriseIntent)
+    }
+
     private fun applyWrite(key: String, value: Any) {
         with (activity.getPreferences(Context.MODE_PRIVATE).edit()) {
             when (value) {
@@ -201,7 +242,9 @@ class AppState(
             "Android - Sunshower" to "sunshower"
         )
         val songNames = songDict.keys.toList()
+        const val SUNRISE_MS = 15 * 60 * 1000
         const val NO_SOUND_ID = -1234567
+        const val SUNRISE_UPDATE = "sunrise.update"
         const val ALARM_ON = "alarm.show"
         const val ALARM_OFF_ACTION_OFF = "alarm.off"
         const val ALARM_OFF_ACTION_SNOOZE = "alarm.snooze"

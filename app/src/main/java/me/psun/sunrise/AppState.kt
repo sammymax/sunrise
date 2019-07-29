@@ -94,11 +94,17 @@ class AppState(
     fun staticSetCW(cw: Int) {
         bpm_handler.removeCallbacks(bpmRunnable)
         static_cw = cw
+        colorListener.setRGB(static_rgb, ColorSetSource.STATIC)
+        colorListener.setCW(static_cw, ColorSetSource.STATIC)
+        colorListener.setWW(static_ww, ColorSetSource.STATIC)
     }
 
     fun staticSetWW(ww: Int) {
         bpm_handler.removeCallbacks(bpmRunnable)
         static_ww = ww
+        colorListener.setRGB(static_rgb, ColorSetSource.STATIC)
+        colorListener.setCW(static_cw, ColorSetSource.STATIC)
+        colorListener.setWW(static_ww, ColorSetSource.STATIC)
     }
 
     fun bpmChange(bpm: Double) {

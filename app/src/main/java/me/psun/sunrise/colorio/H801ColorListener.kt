@@ -47,6 +47,8 @@ class H801ColorListener(val getMAC: () -> String) : ColorListener {
 
     private fun executeNow(count: Int = 1) {
         val mac = getMAC()
+        if (mac.length != 12) return
+
         val buf = ByteArray(11)
         buf[0] = hexStringToByte("FB")
         buf[1] = hexStringToByte("EB")

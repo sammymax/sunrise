@@ -195,11 +195,12 @@ class AppState(
             val finalRGB = 0x250900
             bpm_handler.removeCallbacks(bpmRunnable)
             if (progress < 0.8) {
+                val scaledProgress = progress * progress * 1.25 * 1.25
                 colorListener.setCW(0, ColorSetSource.SUNRISE)
                 colorListener.setWW(0, ColorSetSource.SUNRISE)
-                val r = ((finalRGB shr 16) * progress * 1.25).toInt()
-                val g = (((finalRGB shr 8) and 255) * progress * 1.25).toInt()
-                val b = ((finalRGB and 255) * progress * 1.25).toInt()
+                val r = ((finalRGB shr 16) * scaledProgress).toInt()
+                val g = (((finalRGB shr 8) and 255) * scaledProgress).toInt()
+                val b = ((finalRGB and 255) * scaledProgress).toInt()
                 colorListener.setRGB((r shl 16) or (g shl 8) or b, ColorSetSource.SUNRISE)
             } else {
                 val curWarm = min(48, ((progress - 0.8) * 5 * 48).toInt())

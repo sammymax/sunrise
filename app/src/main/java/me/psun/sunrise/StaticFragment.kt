@@ -11,8 +11,9 @@ import android.widget.TextView
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+import me.psun.sunrise.colorio.ColorListener
 
-class StaticFragment(val appState: AppState) : Fragment() {
+class StaticFragment(val colorListener: ColorListener) : Fragment() {
     private var colorPickerView : ColorPickerView? = null
     private var colorPickerBrightness : BrightnessSlideBar? = null
     private var colorText : TextView? = null
@@ -42,12 +43,12 @@ class StaticFragment(val appState: AppState) : Fragment() {
         warmBar?.setDiscreteValue(0)
         coldBar?.setDiscreteSliderListener(object : DiscreteSliderListener{
             override fun onChange(newValue: Int, fromUser: Boolean) {
-                appState.staticSetCW(newValue)
+                colorListener.setCW(newValue, RootService.ColorSetSource.STATIC)
             }
         })
         warmBar?.setDiscreteSliderListener(object : DiscreteSliderListener {
             override fun onChange(newValue: Int, fromUser: Boolean) {
-                appState.staticSetWW(newValue)
+                colorListener.setWW(newValue, RootService.ColorSetSource.STATIC)
             }
         })
 
@@ -59,7 +60,7 @@ class StaticFragment(val appState: AppState) : Fragment() {
             it.setColorListener(ColorEnvelopeListener{envelope, _ ->
                 colorText?.text = "#" + envelope.hexCode.substring(2)
                 rgbPreview?.setBackgroundColor(envelope.color)
-                appState.staticSetRGB(envelope.color)
+                colorListener.setRGB(envelope.color, RootService.ColorSetSource.STATIC)
             })
         }
 

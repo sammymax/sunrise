@@ -1,9 +1,9 @@
 package me.psun.sunrise.colorio
 
-import me.psun.sunrise.AppState
+import me.psun.sunrise.RootService
 
 interface ColorListener {
-    fun setRGB(rgb: Int, source: AppState.ColorSetSource)
-    fun setCW(cw: Int, source: AppState.ColorSetSource)
-    fun setWW(ww: Int, source: AppState.ColorSetSource)
+    fun setRGB(rgb: Int, source: RootService.ColorSetSource)
+    fun setCW(cw: Int, source: RootService.ColorSetSource)
+    fun setWW(ww: Int, source: RootService.ColorSetSource)
 }

@@ -11,7 +11,7 @@ import android.widget.*
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import java.util.*
 
-class SunriseFragment(val appState: AppState) : Fragment() {
+class SunriseFragment(val stateService: RootService) : Fragment() {
     private var alarmTimeShower : TextView? = null
     private var alarmAMPM : TextView? = null
     private var delButton : FloatingActionButton? = null
@@ -33,16 +33,15 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         noAlarmOverlay = view.findViewById(R.id.no_alarm_overlay)
         isAlarmSound = view.findViewById(R.id.is_alarm_sound)
 
-        if (appState.sunrise_pending) updateAlarmTime()
-
-        val showDialog = View.OnClickListener{_ ->
+        val showDialog = View.OnClickListener{
+            val sunrisePending = (stateService.sunrise_pending == true)
             // show current time + 1 hour if adding alarm, existing alarm time if editing
-            val suggestedAlarmMillis = if (appState.sunrise_pending) appState.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
+            val suggestedAlarmMillis = if (sunrisePending) stateService.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
             val hourMinute = getHourMinuteFromTimeStamp(suggestedAlarmMillis)
-            val dialog = AlarmDialogFragment(hourMinute.first, hourMinute.second, appState.sunrise_spinnerIdx)
+            val dialog = AlarmDialogFragment(hourMinute.first, hourMinute.second, stateService.sunrise_spinnerIdx)
             dialog.setAlarmListener(object : AlarmListener{
                 override fun onChange(hour: Int, minute: Int, spinnerIdx: Int) {
-                    appState.setSunrise(hour, minute, spinnerIdx)
+                    stateService.setSunrise(hour, minute, spinnerIdx)
                     updateAlarmTime()
                     updateViewToState()
                 }
@@ -54,7 +53,7 @@ class SunriseFragment(val appState: AppState) : Fragment() {
         delButton?.setOnClickListener { _ ->
             AlertDialog.Builder(context).setMessage("Delete this alarm?")
                 .setPositiveButton("Yes") {_, _ ->
-                    appState.delSunrise()
+                    stateService.delSunrise()
                     updateViewToState()
                 }
                 .setNegativeButton("No", null)
@@ -73,24 +72,24 @@ class SunriseFragment(val appState: AppState) : Fragment() {
     }
 
     fun updateViewToState() {
-        if (!appState.sunrise_pending) {
+        if (!stateService.sunrise_pending) {
             noAlarmOverlay?.visibility = View.VISIBLE
             return
         }
-        if (appState.sunrise_spinnerIdx == 0)
+        if (stateService.sunrise_spinnerIdx == 0)
             isAlarmSound?.text = "off"
         else
             isAlarmSound?.text = "on"
 
         noAlarmOverlay?.visibility = View.INVISIBLE
-        val millisLeft = appState.sunrise_timeMillis - System.currentTimeMillis()
+        val millisLeft = stateService.sunrise_timeMillis - System.currentTimeMillis()
         val hoursLeft = millisLeft / (60 * 60 * 1000)
         val minutesLeft = (millisLeft - 60 * 60 * 1000 * hoursLeft) / (60 * 1000)
         tilSunrise?.text = "${hoursLeft} hours, ${minutesLeft} minutes until sunrise"
     }
 
     fun updateAlarmTime() {
-        val hourMinutePair = getHourMinuteFromTimeStamp(appState.sunrise_timeMillis)
+        val hourMinutePair = getHourMinuteFromTimeStamp(stateService.sunrise_timeMillis)
         val hour = hourMinutePair.first
         val minute = hourMinutePair.second
 

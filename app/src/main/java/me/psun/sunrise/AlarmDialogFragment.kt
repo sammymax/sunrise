@@ -34,7 +34,7 @@ class AlarmDialogFragment(
             timePicker?.currentMinute = suggestedMinute
         }
 
-        val spinnerArray = listOf("None", "Random") + AppState.songNames
+        val spinnerArray = listOf("None", "Random") + RootService.songNames
         context?.let {
             val adapter = ArrayAdapter<String>(
                 it, android.R.layout.simple_spinner_item, spinnerArray

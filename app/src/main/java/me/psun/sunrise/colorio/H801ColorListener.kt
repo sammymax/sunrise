@@ -2,7 +2,7 @@ package me.psun.sunrise.colorio
 
 import android.os.AsyncTask
 import android.os.Handler
-import me.psun.sunrise.AppState
+import me.psun.sunrise.RootService
 import java.net.DatagramPacket
 import java.net.DatagramSocket
 import java.net.InetAddress
@@ -15,21 +15,21 @@ class H801ColorListener(val getMAC: () -> String) : ColorListener {
     private var numScheduled = 0
     private val handler = Handler()
 
-    override fun setRGB(rgb: Int, source: AppState.ColorSetSource) {
+    override fun setRGB(rgb: Int, source: RootService.ColorSetSource) {
         this.rgb = rgb
-        if (source == AppState.ColorSetSource.BPM) executeNow(3)
+        if (source == RootService.ColorSetSource.BPM) executeNow(3)
         else scheduleUpdate()
     }
 
-    override fun setCW(cw: Int, source: AppState.ColorSetSource) {
+    override fun setCW(cw: Int, source: RootService.ColorSetSource) {
         this.cw = cw
-        if (source == AppState.ColorSetSource.BPM) executeNow(3)
+        if (source == RootService.ColorSetSource.BPM) executeNow(3)
         else scheduleUpdate()
     }
 
-    override fun setWW(ww: Int, source: AppState.ColorSetSource) {
+    override fun setWW(ww: Int, source: RootService.ColorSetSource) {
         this.ww = ww
-        if (source == AppState.ColorSetSource.BPM) executeNow(3)
+        if (source == RootService.ColorSetSource.BPM) executeNow(3)
         else scheduleUpdate()
     }
 

@@ -9,10 +9,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 
-class SettingsFragment : Fragment() {
+class SettingsFragment(val initialMac: String) : Fragment() {
     private var macAddress : EditText? = null
     private var saveButton : Button? = null
-    private var macAddressListener : MacAddressListener? = null
+    private var macAddressListener : ((String) -> Unit)? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,24 +22,16 @@ class SettingsFragment : Fragment() {
         macAddress = view.findViewById(R.id.macAddress)
         saveButton = view.findViewById(R.id.save_settings)
 
-        arguments?.let {
-            it.getString("settings.mac")?.let { mac ->
-                macAddress?.text = SpannableStringBuilder(mac)
-            }
-        }
         saveButton?.setOnClickListener { _ ->
             macAddress?.let {
-                macAddressListener?.onMacAddressChange(it.text.toString())
+                macAddressListener?.invoke(it.text.toString())
             }
         }
+        macAddress?.text = SpannableStringBuilder(initialMac)
         return view
     }
 
-    fun setMacAddressListener(listener : MacAddressListener) {
+    fun setMacAddressListener(listener : (String) -> Unit) {
         macAddressListener = listener
-    }
-
-    fun setMacAddress(mac : String) {
-        macAddress?.text = SpannableStringBuilder(mac)
     }
 }

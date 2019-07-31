@@ -83,8 +83,8 @@ class RingingAlarmActivity : Activity() {
                 idx++
             }
         }
-        val songId = intent.getIntExtra("SongIdentifier", AppState.NO_SOUND_ID)
-        if (songId != AppState.NO_SOUND_ID) {
+        val songId = intent.getIntExtra("SongIdentifier", RootService.NO_SOUND_ID)
+        if (songId != RootService.NO_SOUND_ID) {
             mediaPlayer = MediaPlayer.create(this, songId)
             mediaPlayer?.isLooping = true
         }
@@ -106,8 +106,8 @@ class RingingAlarmActivity : Activity() {
         wakelock = null
 
         val intent = Intent(this, RootActivity::class.java).apply {
-            putExtra(AppState.ALARM_OFF_ACTION_OFF, true)
-            putExtra(AppState.ALARM_OFF_ACTION_SNOOZE, snooze)
+            putExtra(RootService.ALARM_OFF_ACTION_OFF, true)
+            putExtra(RootService.ALARM_OFF_ACTION_SNOOZE, snooze)
             addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
         }
         startActivity(intent)

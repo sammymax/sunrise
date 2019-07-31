@@ -43,6 +43,7 @@ class BPMFragment : Fragment() {
         bpmPreview = view.findViewById(R.id.bpm_preview)
 
         bpmTap?.setOnClickListener{_ ->
+            bpmExp = 0
             taps.addLast(SystemClock.elapsedRealtime())
             recalc()
         }

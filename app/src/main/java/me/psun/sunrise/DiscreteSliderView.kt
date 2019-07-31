@@ -50,7 +50,7 @@ class DiscreteSliderView : LinearLayout {
 
     private fun getText(attrs: AttributeSet?, defStyle: Int) {
         context.theme.obtainStyledAttributes(attrs, R.styleable.DiscreteSliderView, defStyle, 0).let {
-            label?.text = it.getString(R.styleable.DiscreteSliderView_labelText)
+            label.text = it.getString(R.styleable.DiscreteSliderView_labelText)
         }
     }
 }

@@ -11,7 +11,7 @@
                 android:textSize="@dimen/static_font_size"/>
         <TextView
                 android:text="TextView"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content" android:id="@+id/discreteLevel" android:layout_weight="1"
                 android:textAlignment="textEnd" android:textSize="@dimen/static_font_size"/>
     </LinearLayout>

@@ -34,9 +34,9 @@ class SunriseFragment(val stateService: RootService) : Fragment() {
         isAlarmSound = view.findViewById(R.id.is_alarm_sound)
 
         val showDialog = View.OnClickListener{
-            val sunrisePending = (stateService.sunrise_pending == true)
             // show current time + 1 hour if adding alarm, existing alarm time if editing
-            val suggestedAlarmMillis = if (sunrisePending) stateService.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
+            val suggestedAlarmMillis = if (stateService.sunrise_pending)
+                stateService.sunrise_timeMillis else System.currentTimeMillis() + 60 * 60 * 1000
             val hourMinute = getHourMinuteFromTimeStamp(suggestedAlarmMillis)
             val dialog = AlarmDialogFragment(hourMinute.first, hourMinute.second, stateService.sunrise_spinnerIdx)
             dialog.setAlarmListener(object : AlarmListener{
@@ -85,7 +85,7 @@ class SunriseFragment(val stateService: RootService) : Fragment() {
         val millisLeft = stateService.sunrise_timeMillis - System.currentTimeMillis()
         val hoursLeft = millisLeft / (60 * 60 * 1000)
         val minutesLeft = (millisLeft - 60 * 60 * 1000 * hoursLeft) / (60 * 1000)
-        tilSunrise?.text = "${hoursLeft} hours, ${minutesLeft} minutes until sunrise"
+        tilSunrise?.text = "$hoursLeft hours, $minutesLeft minutes until sunrise"
     }
 
     fun updateAlarmTime() {

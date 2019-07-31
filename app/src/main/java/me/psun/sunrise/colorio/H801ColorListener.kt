@@ -82,9 +82,9 @@ class H801ColorListener(val getMAC: () -> String) : ColorListener {
     }
 
     private fun hexStringToByte(hex: String): Byte {
-        val HEX_CHARS = "0123456789ABCDEF"
-        val i1 = HEX_CHARS.indexOf(hex[0])
-        val i2 = HEX_CHARS.indexOf(hex[1])
+        val hexChars = "0123456789ABCDEF"
+        val i1 = hexChars.indexOf(hex[0])
+        val i2 = hexChars.indexOf(hex[1])
         return i1.shl(4).or(i2).toByte()
     }
 }

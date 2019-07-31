@@ -14,50 +14,50 @@ import kotlin.math.pow
 import kotlin.math.roundToInt
 
 class BPMFragment : Fragment() {
-    var bpm_tap : Button? = null
-    var bpm_sync : Button? = null
-    var bpm_halve : Button? = null
-    var bpm_double : Button? = null
+    private var bpmTap : Button? = null
+    private var bpmSync : Button? = null
+    private var bpmHalve : Button? = null
+    private var bpmDouble : Button? = null
 
-    var quantize : Switch? = null
-    var bpm_show : TextView? = null
-    var bpm_preview : TextView? = null
+    private var quantize : Switch? = null
+    private var bpmShow : TextView? = null
+    private var bpmPreview : TextView? = null
 
-    val taps  = CircularArray<Long>()
+    private val taps  = CircularArray<Long>()
     // output bpm = calculated bpm * (2 ^ bpm_exp)
-    var bpm_exp : Int = 0
-    var quant: Boolean = false
-    var listener : BeatListener? = null
+    private var bpmExp : Int = 0
+    private var quant: Boolean = false
+    private var listener : BeatListener? = null
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val view = inflater.inflate(R.layout.mode_bpm, container, false)
-        bpm_tap = view.findViewById(R.id.bpm_tap)
-        bpm_sync = view.findViewById(R.id.bpm_sync)
-        bpm_halve = view.findViewById(R.id.bpm_halve)
-        bpm_double = view.findViewById(R.id.bpm_double)
+        bpmTap = view.findViewById(R.id.bpm_tap)
+        bpmSync = view.findViewById(R.id.bpm_sync)
+        bpmHalve = view.findViewById(R.id.bpm_halve)
+        bpmDouble = view.findViewById(R.id.bpm_double)
         quantize = view.findViewById(R.id.quantize)
-        bpm_show = view.findViewById(R.id.bpm_display)
-        bpm_preview = view.findViewById(R.id.bpm_preview)
+        bpmShow = view.findViewById(R.id.bpm_display)
+        bpmPreview = view.findViewById(R.id.bpm_preview)
 
-        bpm_tap?.setOnClickListener{_ ->
+        bpmTap?.setOnClickListener{_ ->
             taps.addLast(SystemClock.elapsedRealtime())
             recalc()
         }
-        bpm_sync?.setOnClickListener{_ ->
-            listener?.BPMSync()
+        bpmSync?.setOnClickListener{_ ->
+            listener?.bpmSync()
         }
-        bpm_halve?.setOnClickListener {_ ->
-            if (bpm_exp > -5) {
-                bpm_exp--
+        bpmHalve?.setOnClickListener {_ ->
+            if (bpmExp > -5) {
+                bpmExp--
                 recalc()
             }
         }
-        bpm_double?.setOnClickListener{_ ->
-            if (bpm_exp < 5) {
-                bpm_exp++
+        bpmDouble?.setOnClickListener{_ ->
+            if (bpmExp < 5) {
+                bpmExp++
                 recalc()
             }
         }
@@ -72,7 +72,7 @@ class BPMFragment : Fragment() {
         val bpm : Double = when (taps.size()) {
             0 -> 0.0
             1 -> {
-                listener?.BPMSync()
+                listener?.bpmSync()
                 0.0
             }
             else -> {
@@ -80,15 +80,15 @@ class BPMFragment : Fragment() {
                 // time was in ms; 0.001 to get to seconds
                 val duration = 0.001 * (taps.last - taps.first)
                 val numBeats = taps.size() - 1.0
-                val multiplier = 2.0.pow(bpm_exp.toDouble())
+                val multiplier = 2.0.pow(bpmExp.toDouble())
                 val bpm = 60.0 * multiplier * numBeats / duration
                 if (quant) bpm.roundToInt().toDouble()
                 else bpm
             }
         }
-        listener?.BPMChange(bpm)
-        if (bpm > 0) bpm_show?.text = String.format("BPM: %.1f", bpm)
-        else bpm_show?.text = "BPM: -"
+        listener?.bpmChange(bpm)
+        if (bpm > 0) bpmShow?.text = String.format("BPM: %.1f", bpm)
+        else bpmShow?.text = "BPM: -"
     }
 
     fun setBeatListener(bl : BeatListener) {
@@ -96,7 +96,7 @@ class BPMFragment : Fragment() {
     }
 
     fun setPreviewRGB(rgb: Int) {
-        bpm_preview?.setBackgroundColor(0xFF000000.toInt() or rgb)
-        bpm_preview?.setTextColor(rgb.inv())
+        bpmPreview?.setBackgroundColor(0xFF000000.toInt() or rgb)
+        bpmPreview?.setTextColor(rgb.inv())
     }
 }

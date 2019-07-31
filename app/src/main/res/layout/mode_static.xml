@@ -18,7 +18,7 @@
                 android:layout_height="wrap_content">
             <TextView
                     android:text="RGB Code:"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content" android:id="@+id/rgbLabel" android:layout_weight="1"
                     android:textSize="@dimen/static_font_size"/>
             <TextView
@@ -75,7 +75,7 @@
                 app:labelText="Warm White Level (0-255):"/>
         <Space
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:layout_weight="1"/>
+                android:layout_height="0dp" android:layout_weight="1"/>
         <Button
                 android:text="All Lights Off"
                 android:layout_width="match_parent"

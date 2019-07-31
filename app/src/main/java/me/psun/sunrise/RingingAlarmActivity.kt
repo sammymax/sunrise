@@ -17,8 +17,8 @@ import android.widget.TableRow
 import kotlin.random.Random
 
 class RingingAlarmActivity : Activity() {
-    var mediaPlayer : MediaPlayer? = null
-    var wakelock : PowerManager.WakeLock? = null
+    private var mediaPlayer : MediaPlayer? = null
+    private var wakelock : PowerManager.WakeLock? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -58,7 +58,7 @@ class RingingAlarmActivity : Activity() {
                     button.text = "Snooze"
                     button.setBackgroundColor(0xFFFFFFFF.toInt())
                     button.setTextColor(0xFF000000.toInt())
-                    button.setOnClickListener{_ ->
+                    button.setOnClickListener{
                         stopAlarm(true)
                     }
                     AnimatorInflater.loadAnimator(this, R.animator.alarm_flash_snooze).apply{
@@ -70,7 +70,7 @@ class RingingAlarmActivity : Activity() {
                 } else {
                     button.text = "Dismiss"
                     button.setBackgroundColor(0xFF1A9185.toInt())
-                    button.setOnClickListener{_ ->
+                    button.setOnClickListener{
                         stopAlarm(false)
                     }
                     AnimatorInflater.loadAnimator(this, R.animator.alarm_flash_dismiss).apply{

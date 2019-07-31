@@ -9,7 +9,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
 
-class SettingsFragment(val initialMac: String) : Fragment() {
+class SettingsFragment(private val initialMac: String) : Fragment() {
     private var macAddress : EditText? = null
     private var saveButton : Button? = null
     private var macAddressListener : ((String) -> Unit)? = null

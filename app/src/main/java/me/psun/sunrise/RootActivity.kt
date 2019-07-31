@@ -40,11 +40,11 @@ class RootActivity : AppCompatActivity() {
 
             val bpmFragment = BPMFragment()
             bpmFragment.setBeatListener(object : BeatListener{
-                override fun BPMChange(bpm: Double) {
+                override fun bpmChange(bpm: Double) {
                     stateService?.bpmChange(bpm)
                 }
 
-                override fun BPMSync() {
+                override fun bpmSync() {
                     stateService?.bpmSync()
                 }
             })

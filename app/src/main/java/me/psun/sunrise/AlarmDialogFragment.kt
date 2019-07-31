@@ -9,9 +9,9 @@ import android.widget.*
 import androidx.fragment.app.DialogFragment
 
 class AlarmDialogFragment(
-    val suggestedHour: Int,
-    val suggestedMinute: Int,
-    val spinnerIdx: Int
+    private val suggestedHour: Int,
+    private val suggestedMinute: Int,
+    private val spinnerIdx: Int
 ) : DialogFragment() {
     private var buttonCancel : Button? = null
     private var buttonSave : Button? = null
@@ -36,7 +36,7 @@ class AlarmDialogFragment(
 
         val spinnerArray = listOf("None", "Random") + RootService.songNames
         context?.let {
-            val adapter = ArrayAdapter<String>(
+            val adapter = ArrayAdapter(
                 it, android.R.layout.simple_spinner_item, spinnerArray
             )
             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item)

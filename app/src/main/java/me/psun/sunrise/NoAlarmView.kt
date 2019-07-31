@@ -11,7 +11,7 @@ class NoAlarmView : FrameLayout {
     constructor (context: Context, attrs: AttributeSet?, defStyle: Int) : super(context, attrs, defStyle)
     constructor (context: Context, attrs: AttributeSet?, defStyle: Int, defStyleRes: Int) : super(context, attrs, defStyle, defStyleRes)
 
-    var addAlarm : FloatingActionButton? = null;
+    private var addAlarm : FloatingActionButton? = null
 
     init {
         inflate(context, R.layout.no_alarm_view, this)

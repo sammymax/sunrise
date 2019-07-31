@@ -17,6 +17,7 @@ import me.psun.sunrise.colorio.MultiColorListener
 import java.util.*
 import kotlin.math.max
 import kotlin.math.min
+import kotlin.math.pow
 import kotlin.math.roundToLong
 
 class RootService: Service() {
@@ -214,9 +215,10 @@ class RootService: Service() {
         val progress = 1.0 - (sunrise_timeMillis - currentMs).toDouble() / SUNRISE_MS
         if (progress > 0) {
             val finalRGB = 0x250900
+            val finalWW = 30
             bpm_handler.removeCallbacks(bpmRunnable)
             if (progress < 0.8) {
-                val scaledProgress = progress * progress * 1.25 * 1.25
+                val scaledProgress = (progress * 1.25).pow(4.0)
                 colorListener.setCW(0, ColorSetSource.SUNRISE)
                 colorListener.setWW(0, ColorSetSource.SUNRISE)
                 val r = ((finalRGB shr 16) * scaledProgress).toInt()
@@ -224,7 +226,7 @@ class RootService: Service() {
                 val b = ((finalRGB and 255) * scaledProgress).toInt()
                 colorListener.setRGB((r shl 16) or (g shl 8) or b, ColorSetSource.SUNRISE)
             } else {
-                val curWarm = min(48, ((progress - 0.8) * 5 * 48).toInt())
+                val curWarm = min(finalWW, ((progress - 0.8) * 5 * finalWW).toInt())
                 colorListener.setRGB(finalRGB, ColorSetSource.SUNRISE)
                 colorListener.setCW(0, ColorSetSource.SUNRISE)
                 colorListener.setWW(curWarm, ColorSetSource.SUNRISE)
@@ -264,7 +266,7 @@ class RootService: Service() {
             "Android - Sunshower" to "sunshower"
         )
         val songNames = songDict.keys.toList()
-        const val SUNRISE_MS = 1 * 60 * 1000
+        const val SUNRISE_MS = 15 * 60 * 1000
         const val NO_SOUND_ID = -1234567
         const val SUNRISE_UPDATE = "sunrise.update"
         const val ALARM_ON = "alarm.show"

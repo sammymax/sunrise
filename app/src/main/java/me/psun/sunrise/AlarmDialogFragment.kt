@@ -1,10 +1,12 @@
 package me.psun.sunrise
 
+import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.*
 import androidx.fragment.app.DialogFragment
 
@@ -58,6 +60,13 @@ class AlarmDialogFragment(
             dismiss()
         }
         return view
+    }
+
+    override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
+        val dialog = super.onCreateDialog(savedInstanceState)
+        // on Amazon Fire 7 this otherwise causes huge top space
+        dialog.window?.requestFeature(Window.FEATURE_NO_TITLE)
+        return dialog
     }
 
     fun setAlarmListener(al: AlarmListener) {

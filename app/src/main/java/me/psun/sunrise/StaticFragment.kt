@@ -73,7 +73,7 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
             it.setColorListener(ColorEnvelopeListener{envelope, _ ->
                 colorText?.text = "#" + envelope.hexCode.substring(2)
                 rgbPreview?.setBackgroundColor(envelope.color)
-                rgb = envelope.color
+                rgb = envelope.color and 0x00FFFFFF
                 updateColors()
             })
         }
@@ -109,6 +109,9 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
     private fun updateColors() {
         colorListener.setWW(gammaCorrect(ww), RootService.ColorSetSource.STATIC)
         colorListener.setCW(gammaCorrect(cw), RootService.ColorSetSource.STATIC)
-        colorListener.setRGB(gammaCorrect(rgb), RootService.ColorSetSource.STATIC)
+        val r = gammaCorrect(rgb shr 16)
+        val g = gammaCorrect((rgb shr 8) and 255)
+        val b = gammaCorrect(rgb and 255)
+        colorListener.setRGB((r shl 16) or (g shl 8) or b, RootService.ColorSetSource.STATIC)
     }
 }

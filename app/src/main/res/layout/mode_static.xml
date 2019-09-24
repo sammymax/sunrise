@@ -76,6 +76,10 @@
         <Space
                 android:layout_width="match_parent"
                 android:layout_height="0dp" android:layout_weight="1"/>
+        <Switch
+                android:text="Gamma Correction"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" android:id="@+id/gammaSwitch"/>
         <Button
                 android:text="All Lights Off"
                 android:layout_width="match_parent"

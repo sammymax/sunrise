@@ -6,12 +6,13 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.TextView
+import android.widget.*
 import com.skydoves.colorpickerview.ColorPickerView
 import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar
 import me.psun.sunrise.colorio.ColorListener
+import kotlin.math.pow
+import kotlin.math.roundToInt
 
 class StaticFragment(val colorListener: ColorListener) : Fragment() {
     private var colorPickerView : ColorPickerView? = null
@@ -21,8 +22,13 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
 
     private var coldBar : DiscreteSliderView? = null
     private var warmBar : DiscreteSliderView? = null
+    private var gammaToggle : Switch? = null
     private var allOff : Button? = null
     private var allOn : Button? = null
+
+    private var cw = 0
+    private var ww = 0
+    private var rgb = 0
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,19 +42,26 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
 
         coldBar = view.findViewById(R.id.coldSlider)
         warmBar = view.findViewById(R.id.warmSlider)
+        gammaToggle = view.findViewById(R.id.gammaSwitch)
         allOff = view.findViewById(R.id.all_off)
         allOn = view.findViewById(R.id.all_on)
+
+        gammaToggle?.setOnCheckedChangeListener { _, _ ->
+            updateColors()
+        }
 
         coldBar?.setDiscreteValue(0)
         warmBar?.setDiscreteValue(0)
         coldBar?.setDiscreteSliderListener(object : DiscreteSliderListener{
             override fun onChange(newValue: Int, fromUser: Boolean) {
-                colorListener.setCW(newValue, RootService.ColorSetSource.STATIC)
+                cw = newValue
+                updateColors()
             }
         })
         warmBar?.setDiscreteSliderListener(object : DiscreteSliderListener {
             override fun onChange(newValue: Int, fromUser: Boolean) {
-                colorListener.setWW(newValue, RootService.ColorSetSource.STATIC)
+                ww = newValue
+                updateColors()
             }
         })
 
@@ -60,7 +73,8 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
             it.setColorListener(ColorEnvelopeListener{envelope, _ ->
                 colorText?.text = "#" + envelope.hexCode.substring(2)
                 rgbPreview?.setBackgroundColor(envelope.color)
-                colorListener.setRGB(envelope.color, RootService.ColorSetSource.STATIC)
+                rgb = envelope.color
+                updateColors()
             })
         }
 
@@ -81,5 +95,20 @@ class StaticFragment(val colorListener: ColorListener) : Fragment() {
         }
 
         return view
+    }
+
+    private fun gammaCorrect(orig: Int): Int {
+        if (gammaToggle?.isChecked == false) return orig
+
+        // convert to range [0, 1] then apply sRGB -> linear formula
+        val unit = orig / 255.0
+        if (unit < 0.04045) return (unit / 12.92 * 255.0).roundToInt()
+        return (((unit + 0.055) / 1.055).pow(2.4) * 255).roundToInt()
+    }
+
+    private fun updateColors() {
+        colorListener.setWW(gammaCorrect(ww), RootService.ColorSetSource.STATIC)
+        colorListener.setCW(gammaCorrect(cw), RootService.ColorSetSource.STATIC)
+        colorListener.setRGB(gammaCorrect(rgb), RootService.ColorSetSource.STATIC)
     }
 }

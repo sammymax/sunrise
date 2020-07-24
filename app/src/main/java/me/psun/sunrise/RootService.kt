@@ -165,6 +165,7 @@ class RootService: Service() {
     fun delSunrise() {
         sunrise_pending = false
         val pendingIntent = createPendingAlarmIntent()
+        pendingIntent.cancel()
         alarmManager?.cancel(pendingIntent)
         val sunriseIntent = createSunriseIntent()
         alarmManager?.cancel(sunriseIntent)

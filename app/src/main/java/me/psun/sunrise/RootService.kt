@@ -171,8 +171,8 @@ class RootService: Service() {
     }
 
     fun snoozeAlarm() {
-        // snooze for 10 minutes
-        sunrise_timeMillis = System.currentTimeMillis() + 3 * 60 * 100
+        // snooze for 5 minutes
+        sunrise_timeMillis = System.currentTimeMillis() + 5 * 60 * 1000
         sunrise_pending = true
         val pendingIntent = createPendingAlarmIntent()
         alarmManager?.setExact(AlarmManager.RTC_WAKEUP, sunrise_timeMillis, pendingIntent)
